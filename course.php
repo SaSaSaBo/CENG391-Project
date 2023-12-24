@@ -5,34 +5,30 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="tables.css">
 
-
 </head>
 <body>
 
-<form action="home_page.php" method="post" style="max-width:500px;margin:auto">
+<form action="marks.php" method="post" style="max-width:500px;margin:auto">
 
-
-<h2>Scholarship Table</h2>
+<h2>Course Table</h2>
 
 <table>
 
   <tr>
-    <th>StudentID</th>
-    <th>Type</th>
-    <th>Amount</th>
-    <th>ValidityPeriod</th>
+    <th>CourseID</th>
+    <th>CourseName</th>
   </tr>
 
   <?php
 
     include "connection.php";
 
-    $select = "SELECT * FROM Marks";
+    $select = "SELECT * FROM Course";
     $result = $connection->query($select);
 
     if ($result->num_rows > 0) {
       while ($select = $result->fetch_assoc()) {
-        echo "<tr><td>" . $select["StudentID"] . "</td><td>" . $select["Type"] . "</td><td>" . $select["Amount"] . "</td><td>" . $select["ValidityPeriod"] . "</td></tr>";
+        echo "<tr><td style='color: white;'>" . $select["CourseID"] . "</td><td style='color: white;'>" . $select["CourseName"] . "</td></tr>";
       }
     }
     else {
@@ -44,7 +40,7 @@
 
 </table>
 
-<button type="submit" class="btn">Exit</button>
+<button type="submit" class="btn">Next</button>
 </form>
 
 </body>

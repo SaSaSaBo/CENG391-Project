@@ -45,8 +45,27 @@ body {
   cursor: pointer;
   width: 100%;
   opacity: 0.9;
+  text-align: center;
 }
 
 .btn:hover {
   opacity: 1;
+  background-color: rgba(71, 151, 61, 0.541);
+}
+
+button {
+  background-color: #a04545;
+  color: #fff;
+  font-size: 16px;
+  padding: 10px 14px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  display: inline-block;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+button:hover {
+  background-color: #a04545b5;
 }

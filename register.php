@@ -10,20 +10,26 @@
 </head>
 <body>
 
-<form action="login_page.php" method="post" style="max-width:500px;margin:auto">
-  <h2 class="register">Register Page</h2>
-  <div class="input-container">
-    <i class="fa fa-user icon"></i>
-    <input class="input-field" type="text" placeholder="Username / StudentID" name="usrnm">
-  </div>
 
-  <div class="input-container">
-    <i class="fa fa-key icon"></i>
-    <input class="input-field" type="password" placeholder="Password" name="psw">
-  </div>
 
-  <button type="submit" class="btn">Login</button>
-</form>
+    <form action="register.php" method="post" style="max-width:500px;margin:auto">
+        <h2 class="register">Register Page</h2>    
+        <a href="login_page.php">
+            <button class="button">Log In</button>
+        </a>
+        <div class="input-container">
+            <i class="fa fa-user icon"></i>
+            <input class="input-field" type="text" placeholder="Username / StudentID" name="usrnm">
+        </div>
+
+        <div class="input-container">
+            <i class="fa fa-key icon"></i>
+            <input class="input-field" type="password" placeholder="Password" name="psw">
+        </div>
+
+        <button type="submit" class="btn">Register</button>
+
+    </form>
 
 </body>
 </html>
