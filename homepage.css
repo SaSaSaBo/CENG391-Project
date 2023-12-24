@@ -1,0 +1,112 @@
+body {
+    font-family: 'Arial', sans-serif;
+    text-align: center;
+    background-color: #121212;
+    margin: 0;
+    padding: 0;
+}
+
+#menu {
+    height: 80px;
+    padding: 0 20px;
+    background-color: #ff0c0c52;
+}
+
+#logo {
+    color: #ffffff;
+    font-size: 25px;
+    font-weight: bolder;
+    float: left;
+    margin-top: 25px;
+}
+
+p {
+    color: #ffffff;
+    font-weight: bolder;
+}
+
+button {
+    background-color: #b22525;
+    color: #fff;
+    font-size: 16px;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    display: inline-block;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+button:hover {
+    background-color: #a04545;
+}
+
+#info1
+{
+    background-color: #121212;
+    padding: 50px;
+    text-align: center;
+    height: 600px;
+}
+
+#info2
+{
+    background-color: #121212;
+    padding: 50px;
+    text-align: center;
+    height: 700px;
+    display: inline-block;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    color: #fff;
+}
+
+/* Başlık stilleri */
+ul li {
+    font-weight: 200;
+    margin-bottom: 5px;
+    color: #fff;
+    list-style-type: circle;
+}
+
+/* Alt başlık stilleri */
+ul li ul li {
+    margin-left: 2px;
+    font-weight: normal;
+    color: #fff;
+    list-style-type: none;
+}
+
+/* Kod stilleri */
+code {
+    background-color: #121212;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-family: 'Arial', sans-serif;
+    float: left;
+}
+
+#copyright
+{
+    color: white;
+    font-size: 20px;
+    letter-spacing: 2px;
+    display: block;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+#up
+{
+    color: rgb(255, 255, 255);
+    border: 1px solid white;
+    border-radius: 50%;
+    font-size: 15px;
+    padding: 12px 12px;
+    display: inline-block;
+    margin-top: 10px;
+}
