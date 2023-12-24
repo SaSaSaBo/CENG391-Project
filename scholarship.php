@@ -59,28 +59,30 @@
 </head>
 <body>
 
-<form action="Courset.php" method="post" style="max-width:500px;margin:auto">
+<form action="home_page.php" method="post" style="max-width:500px;margin:auto">
 
 
-<h2>Student Table</h2>
+<h2>Scholarship Table</h2>
 
 <table>
 
   <tr>
     <th>StudentID</th>
-    <th>Password</th>
+    <th>Type</th>
+    <th>Amount</th>
+    <th>ValidityPeriod</th>
   </tr>
 
   <?php
 
     include "connection.php";
 
-    $select = "SELECT * FROM student";
+    $select = "SELECT * FROM Marks";
     $result = $connection->query($select);
 
     if ($result->num_rows > 0) {
       while ($select = $result->fetch_assoc()) {
-        echo "<tr><td style='color: white;'>" . $select["StudentID"] . "</td><td style='color: white;'>" . $select["Password"] . "</td></tr>";
+        echo "<tr><td>" . $select["StudentID"] . "</td><td>" . $select["Type"] . "</td><td>" . $select["Amount"] . "</td><td>" . $select["ValidityPeriod"] . "</td></tr>";
       }
     }
     else {
@@ -92,7 +94,7 @@
 
 </table>
 
-<button type="submit" class="btn">Next</button>
+<button type="submit" class="btn">Exit</button>
 </form>
 
 </body>

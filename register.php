@@ -5,13 +5,13 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" type="text/css" href="loginpage.css">
 
-<title>Login Page</title>
+<title>Register Page</title>
 
 </head>
 <body>
 
-<form action="tables.php" method="post" style="max-width:500px;margin:auto">
-  <h2 class="register">Login Page</h2>
+<form action="login_page.php" method="post" style="max-width:500px;margin:auto">
+  <h2 class="register">Register Page</h2>
   <div class="input-container">
     <i class="fa fa-user icon"></i>
     <input class="input-field" type="text" placeholder="Username / StudentID" name="usrnm">
@@ -32,15 +32,18 @@
 
   include "connection.php";
 
-  // session_start();
-  // if (isset($_POST["usrnm"]) && isset($_POST["psw"])) {
-  //   if ($_POST["usrnm"] == "sasa" && $_POST["psw"] == "18032500") {
-  //     $_SESSION["user"] = $_POST["usrnm"];
-  //     header("location: tables.php");
-  //   }
-  //   else {
-  //     echo "<script>alert('Something got wrong');</script>";
-  //   }
-  // }
+  if (isset($_POST['usrnm']) && isset($_POST['psw'])) {
+    $username = $_POST['usrnm'];
+    $password = $_POST['psw']; 
+
+    $add = "INSERT INTO student (`StudentID`, `Password`) VALUES ('".$username."', '".$password."')";
+
+    if ($connection->query($add) === TRUE) {
+      echo "<script>alert('Register Successful');</script>";
+    }
+    else {
+      echo "<script>alert('Register Failed');</script>";
+    }
+  } 
 
 ?>

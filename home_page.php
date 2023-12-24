@@ -113,9 +113,13 @@
 <br>
 <br>
 <br>
-    
-    <a href="login_page.php">
+
+    <a href="register.php">
         <button class="button">Sign In</button>
+    </a>
+
+    <a href="login_page.php">
+        <button class="button">Log In</button>
     </a>
 
     <div id="copyright">2023 All Rights Reserved</div>

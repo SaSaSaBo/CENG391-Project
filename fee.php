@@ -59,28 +59,30 @@
 </head>
 <body>
 
-<form action="Courset.php" method="post" style="max-width:500px;margin:auto">
+<form action="scholarship.php" method="post" style="max-width:500px;margin:auto">
 
 
-<h2>Student Table</h2>
+<h2>Fee Table</h2>
 
 <table>
 
   <tr>
     <th>StudentID</th>
-    <th>Password</th>
+    <th>Amount</th>
+    <th>DueDate</th>
+    <th>PaymentStatus</th>
   </tr>
 
   <?php
 
     include "connection.php";
 
-    $select = "SELECT * FROM student";
+    $select = "SELECT * FROM fee";
     $result = $connection->query($select);
 
     if ($result->num_rows > 0) {
       while ($select = $result->fetch_assoc()) {
-        echo "<tr><td style='color: white;'>" . $select["StudentID"] . "</td><td style='color: white;'>" . $select["Password"] . "</td></tr>";
+        echo "<tr><td>" . $select["StudentID"] . "</td><td>" . $select["Amount"] . "</td><td>" . $select["DueDate"] . "</td><td>" . $select["PaymentStatus"] . "</td></tr>";
       }
     }
     else {
