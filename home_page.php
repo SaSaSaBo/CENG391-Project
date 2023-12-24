@@ -118,9 +118,7 @@
         <button class="button">Sign In</button>
     </a>
 
-    <a href="login_page.php">
-        <button class="button">Log In</button>
-    </a>
+
 
     <div id="copyright">2023 All Rights Reserved</div>
     <a href="javascript:void(0);" onclick="scrollToSection();" href="#menu"><i class="fa-solid fa-arrow-up" id="up"></i></a>

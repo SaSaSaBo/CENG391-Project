@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="EN">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -76,7 +76,26 @@
         background-color: #a04545b5;
       }
 
+      .edi {
+        background-color: #ea7500;
+        text-decoration: none;
+        color: #000;
+        padding: 5px 8px;
+        border-radius: 8px;
+      }
+
+      .ed {
+        background-color: #a04545;
+        text-decoration: none;
+        color: #000;
+        padding: 5px 8px;
+        border-radius: 8px;
+      }
+
   </style>
+
+  <title>Tables Pages</title>
+
 </head>
 <body>
 
@@ -106,73 +125,19 @@
       $result = $connection->query($select);
       
       if ($result->num_rows > 0) {
-          while ($row = $result->fetch_assoc()) {
-              echo "<tr>
-                      <td style='color: white;'>" . $row["StudentID"] . "</td>
-                      <td style='color: white;'>" . $row["Password"] . "</td>
-                      <td>
-                          <a href='?action=edit&id=" . $row["StudentID"] . "'>Edit</a> | 
-                          <a href='?action=delete&id=" . $row["StudentID"] . "'>Delete</a>
-                      </td>
-                    </tr>";
-          }
+        while ($row = $result->fetch_assoc()) {
+          echo "<tr>
+                  <td style='color: white;'>" . $row["StudentID"] . "</td>
+                  <td style='color: white;'>" . $row["Password"] . "</td>
+                  <td>
+                      <a href='edit_student.php?id=" . $row["StudentID"] . "' class='edi'>Edit</a>
+                      <a href='?action=delete&id=" . $row["StudentID"] . " ". $row["Password"] . " ' class='ed'>Delete</a>
+                  </td>
+                </tr>";
+        }
       } else {
           echo "<tr><td colspan='3'>0 results</td></tr>";
       }
-      
-      // Edit ve Delete işlemleri
-      if (isset($_GET['action']) && isset($_GET['id'])) {
-        $action = $_GET['action'];
-        $studentID = $_GET['id'];
-    
-        if ($action == 'edit') {
-            // Öğrenci verilerini al
-            $select = "SELECT * FROM student WHERE StudentID = $studentID";
-            $result = $connection->query($select);
-    
-            if ($result->num_rows > 0) {
-                $studentData = $result->fetch_assoc();
-                // Düzenleme formunu görüntüle
-                echo "<form action='' method='post'>
-                        <input type='hidden' name='studentID' value='" . $studentData["StudentID"] . "'>
-                        Password: <input type='text' name='password' value='" . $studentData["Password"] . "'><br>
-                        <input type='submit' name='update' value='Update'>
-                      </form>";
-            } else {
-                echo "Student not found.";
-            }
-        } elseif ($action == 'delete') {
-            // Öğrenciyi veritabanından sil
-            $delete = "DELETE FROM student WHERE StudentID = $studentID";
-            $result = $connection->query($delete);
-    
-            if ($result) {
-                echo "Student deleted successfully.";
-                // Başarıyla silindiği durumda başka bir sayfaya yönlendir
-                header("Location: tables.php");
-                exit(); // Kodun devamını engellemek için exit() kullanın
-            } else {
-                echo "Error deleting student: " . $connection->error;
-            }
-        }
-    }
-    
-    // Güncelleme işlemi
-    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update'])) {
-        $studentID = $_POST['studentID'];
-        $password = $_POST['password'];
-    
-        // Veritabanındaki öğrenci verilerini güncelle
-        $update = "UPDATE student SET Password = '$password' WHERE StudentID = $studentID";
-        $result = $connection->query($update);
-    
-        if ($result) {
-            echo "Student updated successfully.";
-        } else {
-            echo "Error updating student: " . $connection->error;
-        }
-    }
-      
     ?>
 
   </table>
@@ -184,6 +149,7 @@
     <tr>
       <th>CourseID</th>
       <th>CourseName</th>
+      <th>Action</th>
     </tr>
 
     <?php
@@ -194,17 +160,60 @@
       $result = $connection->query($select);
 
       if ($result->num_rows > 0) {
-        while ($select = $result->fetch_assoc()) {
-          echo "<tr><td style='color: white;'>" . $select["CourseID"] . "</td><td style='color: white;'>" . $select["CourseName"] . "</td></tr>";
-        }
+        while ($row = $result->fetch_assoc()) {
+          echo "<tr><td style='color: white;'>" . $row["CourseID"] . "</td><td style='color: white;'>" . $row["CourseName"] . "</td>
+          <td>
+          <a href='?action=delete&id=" . $row["CourseID"] . " ". $row["CourseName"] . " ' class='ed'>Delete</a>
+          </td>
+          </tr>";
+      }
+      
       }
       else {
         echo "<tr><td colspan='2'>0 results</td></tr>";
       }
+
+      if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET["action"]) && isset($_GET["id"])) {
+        $action = $_GET["action"];
+        $id = intval($_GET["id"]); // Güvenli bir şekilde integer'a dönüştürme
+        $courseName = $_GET["courseName"];    
+
+        $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
+        echo "ID: " . $id; // Bu satırı ekleyerek ID değerini kontrol edin
+
+        if ($action === "delete" && $id > 0) {
+            // Perform the deletion based on the action and id
+            $deleteQuery = $connection->prepare("DELETE FROM Course WHERE CourseID = ? AND CourseName = ?");
+            $deleteQuery->bind_param("is", $id, $courseName);
+                      
+    
+            if ($deleteQuery->execute()) {
+              echo "<script>alert('Course deleted successfully');</script>";
+          } else {
+              echo "<script>alert('Error: " . $deleteQuery->error . "\\nSQL: " . $deleteQuery->errno . " " . $deleteQuery->error . "');</script>";
+          }
+          
+    
+            $deleteQuery->close();
+    
+            // Redirect to the course table page
+            echo "<script>window.location.href = 'tables.php#courseTable';</script>";
+        }
+    }
+    
+    // Close the database connection
+    $connection->close();
+
+    
     
     ?>
 
   </table>
+
+  <div style="text-align:center;margin-top:20px;"> 
+    <button onclick="showAddCourseForm()" class="button">Add Course</button>
+  </div>
+
 </div>
 
 <div class="tab" id="marksTable">
@@ -216,6 +225,7 @@
       <th>Marks</th>
       <th>Grades</th>
       <th>Semester</th>
+      <th>Action</th>
     </tr>
 
     <?php
@@ -226,9 +236,15 @@
       $result = $connection->query($select);
 
       if ($result->num_rows > 0) {
-        while ($select = $result->fetch_assoc()) {
-          echo "<tr><td>" . $select["StudentID"] . "</td><td>" . $select["CourseID"] . "</td><td>" . $select["Marks"] . "</td><td>" . $select["Grades"] . "</td><td>" . $select["Semester"] . "</td></tr>";
-        }
+        while ($marksRow = $result->fetch_assoc()) {
+          echo "<tr><td>" . $marksRow["StudentID"] . "</td><td>" . $marksRow["CourseID"] . "</td><td>" . $marksRow["Marks"] . "</td><td>" . $marksRow["Grades"] . "</td><td>" . $marksRow["Semester"] . "</td>
+          <td>
+              <a href='?id=" . $marksRow["StudentID"] . "' class='edi'>Edit</a>
+              <a href='?action=delete&id=" . $marksRow["Marks"] . " ". $marksRow["Grades"] . " ' class='ed'>Delete</a>
+          </td>
+          </tr>";
+      }
+      
       }
       else {
         echo "<tr><td colspan='2'>0 results</td></tr>";
@@ -247,6 +263,7 @@
       <th>Amount</th>
       <th>DueDate</th>
       <th>PaymentStatus</th>
+      <th>Action</th>
     </tr>
 
     <?php
@@ -256,15 +273,19 @@
       $select = "SELECT * FROM fee";
       $result = $connection->query($select);
 
-      if ($result->num_rows > 0) {
-        while ($select = $result->fetch_assoc()) {
-          echo "<tr><td>" . $select["StudentID"] . "</td><td>" . $select["Amount"] . "</td><td>" . $select["DueDate"] . "</td><td>" . $select["PaymentStatus"] . "</td></tr>";
+      if ($resultFee->num_rows > 0) {
+        while ($feeRow = $resultFee->fetch_assoc()) {
+            echo "<tr><td>" . $feeRow["StudentID"] . "</td><td>" . $feeRow["Amount"] . "</td><td>" . $feeRow["DueDate"] . "</td><td>" . $feeRow["PaymentStatus"] . "</td>
+            <td>
+            <a href='edit_student.php?id=" . $feeRow["DueDate"] . "' class='edi'>Edit</a>
+            <a href='?action=delete&id=" . $feeRow["StudentID"] . " ". $feeRow["Password"] . " ' class='ed'>Delete</a>
+            </td>
+            </tr>";
         }
-      }
-      else {
-        echo "<tr><td colspan='2'>0 results</td></tr>";
-      }
-    
+    } else {
+        echo "<tr><td colspan='5'>0 results</td></tr>";
+    }
+      
     ?>
 
   </table>
@@ -278,6 +299,7 @@
       <th>Type</th>
       <th>Amount</th>
       <th>ValidityPeriod</th>
+      <th>Action</th>
     </tr>
 
     <?php
@@ -287,21 +309,23 @@
       $select = "SELECT * FROM Scholar";
       $result = $connection->query($select);
 
-      if ($result->num_rows > 0) {
-        while ($select = $result->fetch_assoc()) {
-          echo "<tr><td>" . $select["StudentID"] . "</td><td>" . $select["Type"] . "</td><td>" . $select["Amount"] . "</td><td>" . $select["ValidityPeriod"] . "</td></tr>";
+      if ($resultScholarship->num_rows > 0) {
+        while ($scholarshipRow = $resultScholarship->fetch_assoc()) {
+            echo "<tr><td>" . $scholarshipRow["StudentID"] . "</td><td>" . $scholarshipRow["Type"] . "</td><td>" . $scholarshipRow["Amount"] . "</td><td>" . $scholarshipRow["ValidityPeriod"] . "</td>
+            <td>
+            <a href='edit_student.php?id=" . $scholarshipRow["Amount"] . "' class='edi'>Edit</a>
+            <a href='?action=delete&id=" . $scholarshipRow["StudentID"] . " ". $scholarshipRow["Password"] . " ' class='ed'>Delete</a>
+            </td>
+            </tr>";
         }
-      }
-      else {
-        echo "<tr><td colspan='2'>0 results</td></tr>";
-      }
+    } else {
+        echo "<tr><td colspan='5'>0 results</td></tr>";
+    }
     
     ?>
 
   </table>
 </div>
-
-
 
 <script>
   function showTab(tabId) {
@@ -315,6 +339,21 @@
     window.location.href = 'home_page.php';
   }
 </script>
+
+<!-- <script>
+  function showAddCourseForm() {
+    // You can redirect to a new page for adding a course or show a modal form, as per your requirements
+    alert("Redirect to the Add Course page or show a modal form for adding a course.");
+  }
+</script> -->
+
+<script>
+  function showAddCourseForm() {
+    // Redirect to the Add Course page
+    window.location.href = 'add_course.php'; // Replace 'add_course.php' with the actual URL
+  }
+</script>
+
 
 </body>
 </html>
