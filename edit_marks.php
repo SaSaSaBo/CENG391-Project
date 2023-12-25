@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $updateQuery = $connection->prepare("UPDATE marks SET Marks = ?, Grades = ? WHERE StudentID = ?");
         $updateQuery->bind_param("sii", $newMarks, $newGrades, $studentID);
-         
+        
         if ($updateQuery->execute()) {
             header("Location: tables.php");
             exit;

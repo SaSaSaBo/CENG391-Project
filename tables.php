@@ -312,7 +312,7 @@
         while ($feeRow = $resultFee->fetch_assoc()) {
             echo "<tr><td>" . $feeRow["StudentID"] . "</td><td>" . $feeRow["Amount"] . "</td><td>" . $feeRow["DueDate"] . "</td><td>" . $feeRow["PaymentStatus"] . "</td>
             <td>
-            <a href='edit_student.php?id=" . $feeRow["DueDate"] . "' class='edi'>Edit</a>
+            <a href='edit_fee.php?id=" . $feeRow["DueDate"] . "' class='edi'>Edit</a>
             <a href='?action=delete&id=" . $feeRow["StudentID"] . " ' class='ed'>Delete</a>
             </td>
             </tr>";
@@ -353,7 +353,7 @@
         while ($scholarshipRow = $resultScholarship->fetch_assoc()) {
             echo "<tr><td>" . $scholarshipRow["StudentID"] . "</td><td>" . $scholarshipRow["Type"] . "</td><td>" . $scholarshipRow["Amount"] . "</td><td>" . $scholarshipRow["ValidityPeriod"] . "</td>
             <td>
-            <a href='edit_student.php?id=" . $scholarshipRow["Amount"] . "' class='edi'>Edit</a>
+            <a href='edit_scholar.php?id=" . $scholarshipRow["Amount"] . "' class='edi'>Edit</a>
             <a href='?action=delete&id=" . $scholarshipRow["StudentID"] . " ' class='ed'>Delete</a>
             </td>
             </tr>";
