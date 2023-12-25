@@ -70,4 +70,4 @@ This project include 2nd topics.
 ![image](https://github.com/SaSaSaBo/Project-CENG391/assets/110893411/4e96304e-cc54-48f1-beb5-3bd349cca00d)
 (Scholarship Table)
 ![image](https://github.com/SaSaSaBo/Project-CENG391/assets/110893411/36a7eb7f-735c-4e42-b5b1-361ddfe5c16f)
-(Add STudent for Scholarship)
+(Add Student for Scholarship)
