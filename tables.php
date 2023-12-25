@@ -179,34 +179,31 @@
 
       if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET["action"]) && isset($_GET["id"])) {
         $action = $_GET["action"];
-        $id = intval($_GET["id"]); // Güvenli bir şekilde integer'a dönüştürme
-
+        $id = intval($_GET["id"]);
+    
+        // Güvenli bir şekilde integer'a dönüştürme
         $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
-        echo "ID: " . $id; // Bu satırı ekleyerek ID değerini kontrol edin
-
+    
         if ($action === "delete" && $id > 0) {
             // Perform the deletion based on the action and id
             $deleteQuery = $connection->prepare("DELETE FROM Course WHERE CourseID = ?");
-            $deleteQuery->bind_param("is", $id);
-                      
+            $deleteQuery->bind_param("i", $id);
     
             if ($deleteQuery->execute()) {
-              echo "<script>alert('Course deleted successfully');</script>";
-          } else {
-              echo "<script>alert('Error: " . $deleteQuery->error . "\\nSQL: " . $deleteQuery->errno . " " . $deleteQuery->error . "');</script>";
-          }
-          
+                echo "<script>alert('Course deleted successfully');</script>";
+            } else {
+                echo "<script>alert('Error: " . $deleteQuery->error . "\\nSQL: " . $deleteQuery->errno . " " . $deleteQuery->error . "');</script>";
+            }
     
             $deleteQuery->close();
     
             // Redirect to the course table page
             echo "<script>window.location.href = 'tables.php#courseTable';</script>";
+        } elseif ($action === "edit" && $id > 0) {
+            // Redirect to the edit page with the selected ID
+            echo "<script>window.location.href = 'edit_course.php?id=" . $id . "';</script>";
         }
-      }
-    
-    // Close the database connection
-    $connection->close();
-
+    }
     
     
     ?>
