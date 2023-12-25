@@ -1,3 +1,16 @@
+<?php
+
+    include "connection.php";
+    // Öğrenci ID ve adlarını içeren bir dizi oluştur
+    $studentOptions = array();
+    $selectStudents = "SELECT StudentID FROM student";
+    $resultStudents = $connection->query($selectStudents);
+
+    while ($student = $resultStudents->fetch_assoc()) {
+        $studentOptions[$student["StudentID"]] = $student["StudentID"];
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -86,7 +99,14 @@
 <!-- Your HTML form for adding a fee -->
 <form method="post" action="add_fee.php">
     <label for="studentID">Student ID:</label>
-    <input type="text" name="studentID" required>
+    <select id="studentID" name="studentID" required>
+        <?php
+            // Seçim kutusunu doldur
+            foreach ($studentOptions as $studentID => $studentName) {
+                echo "<option value='" . $studentID . "'>" . $studentName . "</option>";
+            }
+        ?>
+    </select><br>
 
     <label for="amount">Amount:</label>
     <input type="text" name="amount" required>
