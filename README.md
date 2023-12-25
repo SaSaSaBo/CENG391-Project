@@ -1,6 +1,5 @@
 #READ ME
 
-CENG391 Project Topics
 Okan University- CENG 391 Project
  Each student will do SQL project alone.
 If the project is similar to other(s), project grade will be -1. 
