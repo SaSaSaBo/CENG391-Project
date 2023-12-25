@@ -142,7 +142,7 @@
 
   </table>
   <div style="text-align:center;margin-top:20px;"> 
-    <button onclick="showAddStudentForm()" class="button">Add Marks</button>
+    <button onclick="showAddStudentForm()" class="button">Add Student</button>
   </div>
 
 </div>
@@ -299,7 +299,7 @@
   </table>
 
   <div style="text-align:center;margin-top:20px;"> 
-    <button onclick="showAddFeeForm()" class="button">Add Marks</button>
+    <button onclick="showAddFeeForm()" class="button">Add Student</button>
   </div>
 
 </div>
@@ -340,7 +340,7 @@
   </table>
 
   <div style="text-align:center;margin-top:20px;"> 
-    <button onclick="showAddScholarForm()" class="button">Add Marks</button>
+    <button onclick="showAddScholarForm()" class="button">Add Student</button>
   </div>
 
 </div>
@@ -359,6 +359,13 @@
 </script>
 
 <script>
+  function showAddStudentForm() {
+    // Redirect to the Add Course page
+    window.location.href = 'add_student.php'; // Replace 'add_course.php' with the actual URL
+  }
+</script>
+
+<script>
   function showAddCourseForm() {
     // Redirect to the Add Course page
     window.location.href = 'add_course.php'; // Replace 'add_course.php' with the actual URL
@@ -372,6 +379,19 @@
   }
 </script>
 
+<script>
+  function showAddFeeForm() {
+    // Redirect to the Add Course page
+    window.location.href = 'add_fee.php'; // Replace 'add_course.php' with the actual URL
+  }
+</script>
+
+<script>
+  function showAddScholarForm() {
+    // Redirect to the Add Course page
+    window.location.href = 'add_scholar.php'; // Replace 'add_course.php' with the actual URL
+  }
+</script>
 
 </body>
 </html>
