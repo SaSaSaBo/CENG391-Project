@@ -156,35 +156,34 @@
 
       include "connection.php";
 
-      $select = "SELECT * FROM Course";
+      $select = "SELECT * FROM course";
       $result = $connection->query($select);
 
       if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
           echo "<tr><td style='color: white;'>" . $row["CourseID"] . "</td><td style='color: white;'>" . $row["CourseName"] . "</td>
           <td>
-          <a href='?action=delete&id=" . $row["CourseID"] . " ". $row["CourseName"] . " ' class='ed'>Delete</a>
+          <a href='?action=delete&id=" . $row["CourseID"] . "' class='ed'>Delete</a>
           </td>
           </tr>";
       }
       
       }
       else {
-        echo "<tr><td colspan='2'>0 results</td></tr>";
+        echo "<tr><td colspan='3'>0 results</td></tr>";
       }
 
       if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET["action"]) && isset($_GET["id"])) {
         $action = $_GET["action"];
         $id = intval($_GET["id"]); // Güvenli bir şekilde integer'a dönüştürme
-        $courseName = $_GET["courseName"];    
 
         $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
         echo "ID: " . $id; // Bu satırı ekleyerek ID değerini kontrol edin
 
         if ($action === "delete" && $id > 0) {
             // Perform the deletion based on the action and id
-            $deleteQuery = $connection->prepare("DELETE FROM Course WHERE CourseID = ? AND CourseName = ?");
-            $deleteQuery->bind_param("is", $id, $courseName);
+            $deleteQuery = $connection->prepare("DELETE FROM Course WHERE CourseID = ?");
+            $deleteQuery->bind_param("is", $id);
                       
     
             if ($deleteQuery->execute()) {
@@ -199,7 +198,7 @@
             // Redirect to the course table page
             echo "<script>window.location.href = 'tables.php#courseTable';</script>";
         }
-    }
+      }
     
     // Close the database connection
     $connection->close();
@@ -247,12 +246,17 @@
       
       }
       else {
-        echo "<tr><td colspan='2'>0 results</td></tr>";
+        echo "<tr><td colspan='6'>0 results</td></tr>";
       }
     
     ?>
 
   </table>
+
+  <div style="text-align:center;margin-top:20px;"> 
+    <button onclick="showAddMarksForm()" class="button">Add Marks</button>
+  </div>
+
 </div>
 
 <div class="tab" id="feeTable">
@@ -271,14 +275,14 @@
       include "connection.php";
 
       $select = "SELECT * FROM fee";
-      $result = $connection->query($select);
+      $resultFee = $connection->query($select);
 
-      if ($resultFee->num_rows > 0) {
+      if ($resultFee -> num_rows > 0) {
         while ($feeRow = $resultFee->fetch_assoc()) {
             echo "<tr><td>" . $feeRow["StudentID"] . "</td><td>" . $feeRow["Amount"] . "</td><td>" . $feeRow["DueDate"] . "</td><td>" . $feeRow["PaymentStatus"] . "</td>
             <td>
             <a href='edit_student.php?id=" . $feeRow["DueDate"] . "' class='edi'>Edit</a>
-            <a href='?action=delete&id=" . $feeRow["StudentID"] . " ". $feeRow["Password"] . " ' class='ed'>Delete</a>
+            <a href='?action=delete&id=" . $feeRow["StudentID"] . " ' class='ed'>Delete</a>
             </td>
             </tr>";
         }
@@ -307,14 +311,14 @@
       include "connection.php";
 
       $select = "SELECT * FROM Scholar";
-      $result = $connection->query($select);
+      $resultScholarship = $connection->query($select);
 
       if ($resultScholarship->num_rows > 0) {
         while ($scholarshipRow = $resultScholarship->fetch_assoc()) {
             echo "<tr><td>" . $scholarshipRow["StudentID"] . "</td><td>" . $scholarshipRow["Type"] . "</td><td>" . $scholarshipRow["Amount"] . "</td><td>" . $scholarshipRow["ValidityPeriod"] . "</td>
             <td>
             <a href='edit_student.php?id=" . $scholarshipRow["Amount"] . "' class='edi'>Edit</a>
-            <a href='?action=delete&id=" . $scholarshipRow["StudentID"] . " ". $scholarshipRow["Password"] . " ' class='ed'>Delete</a>
+            <a href='?action=delete&id=" . $scholarshipRow["StudentID"] . " ' class='ed'>Delete</a>
             </td>
             </tr>";
         }
@@ -340,17 +344,17 @@
   }
 </script>
 
-<!-- <script>
-  function showAddCourseForm() {
-    // You can redirect to a new page for adding a course or show a modal form, as per your requirements
-    alert("Redirect to the Add Course page or show a modal form for adding a course.");
-  }
-</script> -->
-
 <script>
   function showAddCourseForm() {
     // Redirect to the Add Course page
     window.location.href = 'add_course.php'; // Replace 'add_course.php' with the actual URL
+  }
+</script>
+
+<script>
+  function showAddMarksForm() {
+    // Redirect to the Add Course page
+    window.location.href = 'add_marks.php'; // Replace 'add_course.php' with the actual URL
   }
 </script>
 
