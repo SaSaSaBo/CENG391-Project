@@ -1,4 +1,4 @@
-#READ ME
+# READ ME
 
 Okan University- CENG 391 Project
  Each student will do SQL project alone.
