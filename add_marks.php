@@ -1,3 +1,26 @@
+<?php
+    include "connection.php";
+
+    $courseOptions = array();
+    $selectCourses = "SELECT CourseID, CourseName FROM course";
+    $resultCourses = $connection->query($selectCourses);
+
+    // Kurs ID ve adlarını içeren bir dizi oluştur
+    
+    while ($course = $resultCourses->fetch_assoc()) {
+        $courseOptions[$course["CourseID"]] = $course["CourseID"] . " - " . $course["CourseName"];
+    }
+
+    // Öğrenci ID ve adlarını içeren bir dizi oluştur
+    $studentOptions = array();
+    $selectStudents = "SELECT StudentID FROM student";
+    $resultStudents = $connection->query($selectStudents);
+
+    while ($student = $resultStudents->fetch_assoc()) {
+        $studentOptions[$student["StudentID"]] = $student["StudentID"];
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="EN">
 <head>
@@ -85,25 +108,24 @@
 
 <form method="POST" action="">
     <label for="studentID">Student ID:</label>
-    <input type="text" id="studentID" name="studentID" required><br>
+    <select id="studentID" name="studentID" required>
+        <?php
+            // Seçim kutusunu doldur
+            foreach ($studentOptions as $studentID => $studentName) {
+                echo "<option value='" . $studentID . "'>" . $studentName . "</option>";
+            }
+        ?>
+    </select><br>
 
     <label for="courseID">Course ID:</label>
     <select id="courseID" name="courseID" required>
-    <?php
-    // Assuming you have a list of courses and their IDs in your database
-    include "connection.php";
-
-    $selectCourses = "SELECT CourseID, CourseName FROM course";
-    $resultCourses = $connection->query($selectCourses);
-
-    while ($row = $resultCourses->fetch_assoc()) {
-        echo "<option value='" . $row["CourseID"] . "'>" . $row["CourseID"] . " - " . $row["CourseName"] . "</option>";
-    }
-
-    $connection->close();
-    ?>
-</select><br>
-
+        <?php
+            // Seçim kutusunu doldur
+            foreach ($courseOptions as $courseID => $courseName) {
+                echo "<option value='" . $courseID . "'>" . $courseName . "</option>";
+            }      
+        ?>
+    </select><br>
 
     <label for="marks">Marks:</label>
     <input type="text" id="marks" name="marks" required><br>
@@ -117,20 +139,29 @@
     <button type="submit" name="submit">Add Marks</button>
 </form>
 
+<script>
+    document.getElementById('courseID').addEventListener('change', function() {
+        var selectedOption = this.options[this.selectedIndex];
+        var selectedCourseID = selectedOption.value.split(' - ')[0];
+        document.getElementById('selectedCourseID').value = selectedCourseID;
+    });
+</script>
+
+
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
     include "connection.php";
 
     // Retrieve values from the form
     $studentID = $_POST["studentID"];
-    $courseID = $_POST["courseID"]; // Update this line to correctly capture Course ID
+    $courseID = $_POST["courseID"];
+    // Update this line to correctly capture Course ID
     $marks = $_POST["marks"];
     $grades = $_POST["grades"];
     $semester = $_POST["semester"];
 
     // Insert the data into the Marks table
-    $insertQuery = $connection->prepare("INSERT INTO Marks (StudentID, CourseID, Marks, Grades, Semester) VALUES (?, ?, ?, ?, ?)");
-    $insertQuery->bind_param("iisss", $studentID, $courseID, $marks, $grades, $semester);
+    $insertQuery = $connection->prepare("INSERT INTO Marks (StudentID, CourseID, Marks, Grades, Semester) VALUES ('".$studentID."', '".$courseID."', '".$marks."', '".$grades."', '".$semester."')");
 
     if ($insertQuery->execute()) {
         echo "<script>alert('Marks added successfully');</script>";
@@ -141,8 +172,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
     $insertQuery->close();
     $connection->close();
 
-    // Redirect to tables.php after form submission
-    echo "<script>window.location.href = 'tables.php#marksTable';</script>";
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
+        // Diğer form işlemleri ...
+    
+        echo "<script>window.location.href = 'tables.php#marksTable';</script>";
+    }
 }
 ?>
 

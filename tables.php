@@ -141,6 +141,10 @@
     ?>
 
   </table>
+  <div style="text-align:center;margin-top:20px;"> 
+    <button onclick="showAddStudentForm()" class="button">Add Marks</button>
+  </div>
+
 </div>
 
 <div class="tab" id="courseTable">
@@ -293,6 +297,11 @@
     ?>
 
   </table>
+
+  <div style="text-align:center;margin-top:20px;"> 
+    <button onclick="showAddFeeForm()" class="button">Add Marks</button>
+  </div>
+
 </div>
 
 <div class="tab" id="scholarshipTable">
@@ -329,6 +338,11 @@
     ?>
 
   </table>
+
+  <div style="text-align:center;margin-top:20px;"> 
+    <button onclick="showAddScholarForm()" class="button">Add Marks</button>
+  </div>
+
 </div>
 
 <script>
