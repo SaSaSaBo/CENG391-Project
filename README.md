@@ -61,7 +61,7 @@ This project include 2nd topics.
 (Add Course)
 ![image](https://github.com/SaSaSaBo/Project-CENG31/assets/110893411/d8c1283d-b905-448a-8ab7-1e8a43044b9b)
 (Marks Table)
-![image](https://github.com/SaSaSaBo/Project-CENG31/assets/110893411/c0b44b0f-f8df-4885-ad00-ceed07214a3b)
+![image](https://github.com/SaSaSaBo/Project-CENG391/assets/110893411/12a5910d-f74e-492d-83e4-a83a84bd5eda)
 (Add Marks)
 ![image](https://github.com/SaSaSaBo/Project-CENG391/assets/110893411/c22d930f-7280-4506-9b65-199cc56610cb)
 (Fee Table)
