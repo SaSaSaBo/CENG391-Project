@@ -138,6 +138,36 @@
       } else {
           echo "<tr><td colspan='3'>0 results</td></tr>";
       }
+
+      if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET["action"]) && isset($_GET["id"])) {
+        $action = $_GET["action"];
+        $id = intval($_GET["id"]); // Güvenli bir şekilde integer'a dönüştürme
+    
+        $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
+        echo "ID: " . $id; // Bu satırı ekleyerek ID değerini kontrol edin
+    
+        if ($action === "delete" && $id > 0) {
+            try {
+                // Perform the deletion based on the action and id
+                $deleteQuery = $connection->prepare("DELETE FROM student WHERE StudentID = ?");
+                $deleteQuery->bind_param("i", $id);
+                
+                if ($deleteQuery->execute()) {
+                    echo "<script>alert('Student deleted successfully');</script>";
+                } else {
+                    echo "<script>alert('Error: " . $deleteQuery->error . "\\nSQL: " . $deleteQuery->errno . " " . $deleteQuery->error . "');</script>";
+                }
+            } catch (Exception $e) {
+                echo "<script>alert('Exception: " . $e->getMessage() . "');</script>";
+            }
+    
+            $deleteQuery->close();
+    
+            // Redirect to the student table page
+            echo "<script>window.location.href = 'tables.php#studentTable';</script>";
+        }
+    }
+
     ?>
 
   </table>
@@ -239,7 +269,7 @@
         while ($marksRow = $result->fetch_assoc()) {
           echo "<tr><td>" . $marksRow["StudentID"] . "</td><td>" . $marksRow["CourseID"] . "</td><td>" . $marksRow["Marks"] . "</td><td>" . $marksRow["Grades"] . "</td><td>" . $marksRow["Semester"] . "</td>
           <td>
-              <a href='?id=" . $marksRow["StudentID"] . "' class='edi'>Edit</a>
+              <a href=edit_marks.php?id=" . $marksRow["StudentID"] . "' class='edi'>Edit</a>
               <a href='?action=delete&id=" . $marksRow["Marks"] . " ". $marksRow["Grades"] . " ' class='ed'>Delete</a>
           </td>
           </tr>";
