@@ -10,9 +10,9 @@ while ($student = $studentQuery->fetch_assoc()) {
 
 // Ders bilgilerini veritabanından çek
 $courseOptions = array();
-$courseQuery = $connection->query("SELECT CourseID FROM course");
+$courseQuery = $connection->query("SELECT CourseID, CourseName FROM course");
 while ($course = $courseQuery->fetch_assoc()) {
-    $courseOptions[$course['CourseID']] = $course['CourseID'];
+    $courseOptions[$course['CourseID']] = $course['CourseID'] . " - " . $course['CourseName'];
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
@@ -26,13 +26,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
     // Insert the data into the Marks table
     $insertQuery = $connection->prepare("INSERT INTO marks (StudentID, CourseID, Marks, Grades, Semester) VALUES (?, ?, ?, ?, ?)");
     $insertQuery->bind_param("iisss", $studentID, $courseID, $marks, $grades, $semester);
-    
 
     if ($insertQuery->execute()) {
         echo "<script>alert('Marks added successfully');</script>";
         echo "<script>window.location.href = 'tables.php#marksTable';</script>";
     } else {
-        echo "<script>alert('Error: " . $insertQuery->error . "\\nSQL: " . $insertQuery->errno . " " . $insertQuery->error . "');</script>";
+        echo "<script>alert('Error adding marks: " . $insertQuery->error . "\\nSQL: " . $insertQuery->errno . " " . $insertQuery->error . "');</script>";
     }
 
     $insertQuery->close();
@@ -40,6 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
 
 $connection->close();
 ?>
+
 
 
 <!DOCTYPE html>
