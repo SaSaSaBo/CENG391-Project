@@ -3,31 +3,43 @@ include "connection.php";
 
 if ($_SERVER["REQUEST_METHOD"] == "GET") {
     if (isset($_GET["id"])) {
-        $id = intval($_GET["id"]);
+        $id = intval($id);
         $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
+        
+        // Bağlantıyı kontrol et
+        if ($connection->connect_error) {
+            die("Connection failed: " . $connection->connect_error);
+        }
 
         $selectQuery = $connection->prepare("SELECT * FROM fee WHERE StudentID = ?");
         $selectQuery->bind_param("i", $id);
         $selectQuery->execute();
+
+        // Result setini al
         $result = $selectQuery->get_result();
 
+        // Result setini kontrol et
+        if ($result === false) {
+            die("Query failed: " . $selectQuery->error);
+        }
+
         if ($result->num_rows > 0) {
-            $fee = $result->fetch_assoc();
-            $studentID = $fee["StudentID"];
-            $amount = $fee["Amount"];
-            $dueDate = $fee["DueDate"];
-            $paymentStatus = $fee["PaymentStatus"];
+            $student = $result->fetch_assoc();
+            $studentID = $student["StudentID"];
+            $amount = $student["Amount"];
+            $dueDate = $student["DueDate"];
+            $paymentStatus = $student["PaymentStatus"];
         } else {
             echo "No fee found.";
             exit;
         }
 
+        // Kullanılan kaynakları serbest bırak
+        $result->close();
         $selectQuery->close();
-    } else {
-        echo "Invalid request.";
-        exit;
     }
-} 
+}
+
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST["newAmount"]) && isset($_POST["newDueDate"]) && isset($_POST["newPaymentStatus"]) && isset($_POST["studentID"])) {
