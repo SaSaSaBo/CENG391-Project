@@ -1,73 +1,3 @@
-<?php
-include "connection.php";
-
-if ($_SERVER["REQUEST_METHOD"] == "GET") {
-    if (isset($_GET["id"])) {
-        $id = intval($id);
-        $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
-        
-        // Bağlantıyı kontrol et
-        if ($connection->connect_error) {
-            die("Connection failed: " . $connection->connect_error);
-        }
-
-        $selectQuery = $connection->prepare("SELECT * FROM fee WHERE StudentID = ?");
-        $selectQuery->bind_param("i", $id);
-        $selectQuery->execute();
-
-        // Result setini al
-        $result = $selectQuery->get_result();
-
-        // Result setini kontrol et
-        if ($result === false) {
-            die("Query failed: " . $selectQuery->error);
-        }
-
-        if ($result->num_rows > 0) {
-            $student = $result->fetch_assoc();
-            $studentID = $student["StudentID"];
-            $amount = $student["Amount"];
-            $dueDate = $student["DueDate"];
-            $paymentStatus = $student["PaymentStatus"];
-        } else {
-            echo "No fee found.";
-            exit;
-        }
-
-        // Kullanılan kaynakları serbest bırak
-        $result->close();
-        $selectQuery->close();
-    }
-}
-
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST["newAmount"]) && isset($_POST["newDueDate"]) && isset($_POST["newPaymentStatus"]) && isset($_POST["studentID"])) {
-        $newAmount = $_POST["newAmount"];
-        $newDueDate = $_POST["newDueDate"];
-        $newPaymentStatus = $_POST["newPaymentStatus"];
-        $studentID = $_POST["studentID"];
-
-        $updateQuery = $connection->prepare("UPDATE fee SET Amount=?, DueDate=?, PaymentStatus=? WHERE StudentID=?");
-        $updateQuery->bind_param("siii", $newAmount, $newDueDate, $newPaymentStatus, $studentID);
-         
-        if ($updateQuery->execute()) {
-            header("Location: tables.php");
-            exit;
-        } else {
-            echo "<script>alert('Error: " . $updateQuery->error . "\\nSQL: " . $updateQuery->errno . " " . $updateQuery->error . "');</script>";
-        }
-
-        $updateQuery->close();
-    } else {
-        echo "Invalid request.";
-        exit;
-    }
-}
-
-$connection->close();
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -143,24 +73,76 @@ $connection->close();
 
 <body>
 
-    <h2>Edit Fee Information</h2>
+<?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
-    <form method="post" action="">
-        <label for="newAmount">New Amount:</label>
-        <input type="text" id="newAmount" name="newAmount" value="<?php echo $amount; ?>" required>
-        
-        <label for="newDueDate">New Due Date:</label>
-        <input type="date" id="newDueDate" name="newDueDate" value="<?php echo $dueDate; ?>" required>
+include "connection.php";
 
-        <label for="newPaymentStatus">New Payment Status:</label>
-        <input type="text" id="newPaymentStatus" name="newPaymentStatus" value="<?php echo $paymentStatus; ?>" required>
+if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET["studentID"])) {
+    $studentID = intval($_GET["studentID"]);  // <-- Değişiklik burada yapıldı
 
-        <input type="hidden" name="studentID" value="<?php echo $studentID; ?>">
+    $selectQuery = $connection->prepare("SELECT * FROM fee WHERE StudentID = ?");
+    $selectQuery->bind_param("i", $studentID);
+    $selectQuery->execute();
+    $result = $selectQuery->get_result();
 
-        <input type="submit" value="Update Information">
-    </form>
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $amount = $row["Amount"];
+        $dueDate = $row["DueDate"];
+        $paymentStatus = $row["PaymentStatus"];
+    ?>
+        <h2>Edit Fee Information</h2>
+    
+        <form method="post" action="">
+            <label for="newAmount">New Amount:</label>
+            <input type="text" id="newAmount" name="newAmount" value="<?php echo $amount; ?>" required>
+            
+            <label for="newDueDate">New Due Date:</label>
+            <input type="date" id="newDueDate" name="newDueDate" value="<?php echo $dueDate; ?>" required>
+    
+            <label for="newPaymentStatus">New Payment Status:</label>
+            <input type="text" id="newPaymentStatus" name="newPaymentStatus" value="<?php echo $paymentStatus; ?>" required>
+    
+            <input type="hidden" name="studentID" value="<?php echo $studentID; ?>">
+    
+            <input type="submit" value="Update Information">
+        </form>
+    <?php
+    } else {
+        echo "<script>alert('No fee information found for student ID: " . $studentID . "');</script>";
+    }
 
-    <!-- İhtiyacınıza göre diğer HTML içeriğini ekleyebilirsiniz -->
+    $selectQuery->close();
+} elseif ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["studentID"])) {
+    $studentID = intval($_POST["studentID"]);
+    $amount = $_POST["newAmount"];
+    $dueDate = $_POST["newDueDate"];
+    $paymentStatus = $_POST["newPaymentStatus"];
+
+    $updateQuery = $connection->prepare("UPDATE fee SET Amount=?, DueDate=?, PaymentStatus=? WHERE StudentID=?");
+    
+    // Prepare hatasını kontrol et
+    if ($updateQuery === false) {
+        die('Error in preparing the update query: ' . $connection->error);
+    }
+    
+    $updateQuery->bind_param("dssi", $amount, $dueDate, $paymentStatus, $studentID);
+
+    // Execute hatasını kontrol et
+    if ($updateQuery->execute()) {
+        echo "<script>alert('Fee information updated successfully');</script>";
+        header("Location: tables.php");
+        exit();
+    } else {
+        echo "<script>alert('Error: " . $updateQuery->error . "\\nSQL: " . $updateQuery->errno . " " . $updateQuery->error . "');</script>";
+    }
+
+    $updateQuery->close();
+}
+?>
+
 
 </body>
 

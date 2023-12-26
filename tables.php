@@ -302,26 +302,29 @@
     </tr>
 
     <?php
-
       include "connection.php";
 
       $select = "SELECT * FROM fee";
       $resultFee = $connection->query($select);
 
-      if ($resultFee -> num_rows > 0) {
+      if ($resultFee->num_rows > 0) {
         while ($feeRow = $resultFee->fetch_assoc()) {
-            echo "<tr><td>" . $feeRow["StudentID"] . "</td><td>" . $feeRow["Amount"] . "</td><td>" . $feeRow["DueDate"] . "</td><td>" . $feeRow["PaymentStatus"] . "</td>
-            <td>
-            <a href='edit_fee.php?id=" . $feeRow["DueDate"] . "' class='edi'>Edit</a>
-            <a href='?action=delete&id=" . $feeRow["StudentID"] . " ' class='ed'>Delete</a>
-            </td>
-            </tr>";
-        }
-    } else {
+          echo "<tr>
+                  <td>" . $feeRow["StudentID"] . "</td>
+                  <td>" . $feeRow["Amount"] . "</td>
+                  <td>" . $feeRow["DueDate"] . "</td>
+                  <td>" . $feeRow["PaymentStatus"] . "</td>
+                  <td>
+                      <a href='edit_fee.php?studentID=" . $feeRow["StudentID"] . "' class='edi'>Edit</a>
+                      <a href='?action=delete&id=" . $feeRow["StudentID"] . "' class='ed'>Delete</a>
+                  </td>
+                </tr>";
+          }
+      } else {
         echo "<tr><td colspan='5'>0 results</td></tr>";
-    }
-      
+      }
     ?>
+
 
   </table>
 
