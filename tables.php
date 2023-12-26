@@ -356,7 +356,7 @@
         while ($scholarshipRow = $resultScholarship->fetch_assoc()) {
             echo "<tr><td>" . $scholarshipRow["StudentID"] . "</td><td>" . $scholarshipRow["Type"] . "</td><td>" . $scholarshipRow["Amount"] . "</td><td>" . $scholarshipRow["ValidityPeriod"] . "</td>
             <td>
-            <a href='edit_scholar.php?id=" . $scholarshipRow["Amount"] . "' class='edi'>Edit</a>
+            <a href='edit_scholar.php?studentID=" . $scholarshipRow["StudentID"] . "' class='edi'>Edit</a>
             <a href='?action=delete&id=" . $scholarshipRow["StudentID"] . " ' class='ed'>Delete</a>
             </td>
             </tr>";
