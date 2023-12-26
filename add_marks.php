@@ -1,25 +1,42 @@
 <?php
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
     include "connection.php";
 
-    $courseOptions = array();
-    $selectCourses = "SELECT CourseID, CourseName FROM course";
-    $resultCourses = $connection->query($selectCourses);
+    // Retrieve values from the form
+    $studentID = $_POST["studentID"];
+    $courseID = $_POST["courseID"];
+    $marks = $_POST["marks"];
+    $grades = $_POST["grades"];
+    $semester = $_POST["semester"];
 
-    // Kurs ID ve adlarını içeren bir dizi oluştur
-    
-    while ($course = $resultCourses->fetch_assoc()) {
-        $courseOptions[$course["CourseID"]] = $course["CourseID"] . " - " . $course["CourseName"];
+    // Check if the entry already exists
+    $checkQuery = $connection->prepare("SELECT * FROM Marks WHERE StudentID = ? AND CourseID = ?");
+    $checkQuery->bind_param("ii", $studentID, $courseID);
+    $checkQuery->execute();
+    $checkResult = $checkQuery->get_result();
+
+    if ($checkResult->num_rows > 0) {
+        echo "<script>alert('Entry already exists.');</script>";
+    } else {
+        // Insert the data into the Marks table
+        $insertQuery = $connection->prepare("INSERT INTO Marks (StudentID, CourseID, Marks, Grades, Semester) VALUES (?, ?, ?, ?, ?)");
+        $insertQuery->bind_param("iisss", $studentID, $courseID, $marks, $grades, $semester);
+
+        if ($insertQuery->execute()) {
+            echo "<script>alert('Marks added successfully.');</script>";
+            echo "<script>window.location.href = 'tables.php';</script>";
+        } else {
+            echo "<script>alert('Error: " . $insertQuery->error . "\\nSQL: " . $insertQuery->errno . " " . $insertQuery->error . "');</script>";
+        }
+
+        $insertQuery->close();
     }
 
-    // Öğrenci ID ve adlarını içeren bir dizi oluştur
-    $studentOptions = array();
-    $selectStudents = "SELECT StudentID FROM student";
-    $resultStudents = $connection->query($selectStudents);
-
-    while ($student = $resultStudents->fetch_assoc()) {
-        $studentOptions[$student["StudentID"]] = $student["StudentID"];
-    }
+    $checkQuery->close();
+    $connection->close();
+}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="EN">

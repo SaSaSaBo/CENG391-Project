@@ -112,7 +112,7 @@
     <input type="text" name="amount" required>
 
     <label for="studentID">Due Date:</label>
-    <input type="text" name="date" required>
+    <input type="date" name="date" required>
 
     <label for="studentID">Payment Status:</label>
     <input type="text" name="payment" required>
@@ -121,8 +121,6 @@
 
     <button type="submit">Add Fee</button>
 </form>
-
-<!-- Add your additional HTML content if needed -->
 
 </body>
 </html>
@@ -144,10 +142,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $insertQuery->bind_param("isss", $studentID, $amount, $date, $payment);
 
 
-    if ($insertQuery->execute()) {
-        echo "<script>alert('Fee added successfully');</script>";
-    } else {
-        echo "<script>alert('Error: " . $insertQuery->error . "');</script>";
+    try {
+        if ($insertQuery->execute()) {
+            echo "<script>alert('Fee added successfully');</script>";
+        } else {
+            echo "<script>alert('Error: " . $insertQuery->error . "');</script>";
+        }
+    } catch (mysqli_sql_exception $e) {
+        // Check for duplicate entry error
+        if ($e->getCode() == 1062) {
+            echo "<script>alert('Error: Duplicate entry. Fee for this student already exists.');</script>";
+        } else {
+            echo "<script>alert('Error: " . $e->getMessage() . "');</script>";
+        }
     }
 
     $insertQuery->close();

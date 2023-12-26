@@ -117,7 +117,7 @@
       <th>Action</th>
     </tr>
 
-    <?php
+   <?php
 
       include "connection.php";
 
@@ -131,7 +131,7 @@
                   <td style='color: white;'>" . $row["Password"] . "</td>
                   <td>
                       <a href='edit_student.php?id=" . $row["StudentID"] . "' class='edi'>Edit</a>
-                      <a href='?action=delete&id=" . $row["StudentID"] . " ". $row["Password"] . " ' class='ed'>Delete</a>
+                      <a href='?action=delete&id=" . intval($row["StudentID"]) . " ' class='ed'>Delete</a>
                   </td>
                 </tr>";
         }
@@ -141,34 +141,38 @@
 
       if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET["action"]) && isset($_GET["id"])) {
         $action = $_GET["action"];
-        $id = intval($_GET["id"]); // Güvenli bir şekilde integer'a dönüştürme
-    
         $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
-        echo "ID: " . $id; // Bu satırı ekleyerek ID değerini kontrol edin
-    
-        if ($action === "delete" && $id > 0) {
-            try {
-                // Perform the deletion based on the action and id
-                $deleteQuery = $connection->prepare("DELETE FROM student WHERE StudentID = ?");
-                $deleteQuery->bind_param("i", $id);
-                
-                if ($deleteQuery->execute()) {
-                    echo "<script>alert('Student deleted successfully');</script>";
-                } else {
-                    echo "<script>alert('Error: " . $deleteQuery->error . "\\nSQL: " . $deleteQuery->errno . " " . $deleteQuery->error . "');</script>";
-                }
-            } catch (Exception $e) {
-                echo "<script>alert('Exception: " . $e->getMessage() . "');</script>";
-            }
-    
-            $deleteQuery->close();
-    
-            // Redirect to the student table page
-            echo "<script>window.location.href = 'tables.php#studentTable';</script>";
+echo "<script>alert('ID received: " . $id . "');</script>";
+
+if ($action === "delete" && $id > 0) {
+    try {
+        // Perform the deletion based on the action and id
+        $deleteQuery = $connection->prepare("DELETE FROM student WHERE StudentID = ?");
+        $deleteQuery->bind_param("i", $id);
+
+        echo "<script>alert('Before execution');</script>";
+
+        if ($deleteQuery->execute()) {
+            echo "<script>alert('Student deleted successfully');</script>";
+        } else {
+            echo "<script>alert('Error: " . $deleteQuery->error . "\\nSQL: " . $deleteQuery->errno . " " . $deleteQuery->error . "');</script>";
         }
+
+        echo "<script>alert('After execution');</script>";
+
+        $deleteQuery->close();
+    } catch (Exception $e) {
+        echo "<script>alert('Exception: " . $e->getMessage() . "');</script>";
     }
 
-    ?>
+    // Redirect to the student table page
+    echo "<script>window.location.href = 'tables.php';</script>";
+    exit(); // Ensure that the script stops execution after the redirect
+}
+
+    }
+
+    ?> 
 
   </table>
   <div style="text-align:center;margin-top:20px;"> 

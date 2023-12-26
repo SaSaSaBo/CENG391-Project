@@ -142,10 +142,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $insertQuery = $connection->prepare("INSERT INTO scholar (StudentID, Type, Amount, ValidityPeriod) VALUES (?, ?, ?, ?)");
     $insertQuery->bind_param("isss", $studentID, $type, $amount, $validity);
 
-    if ($insertQuery->execute()) {
-        echo "<script>alert('Scholar added successfully');</script>";
-    } else {
-        echo "<script>alert('Error: " . $insertQuery->error . "');</script>";
+    try {
+        if ($insertQuery->execute()) {
+            echo "<script>alert('Scholar added successfully');</script>";
+        } else {
+            echo "<script>alert('Error: " . $insertQuery->error . "');</script>";
+        }
+    } catch (mysqli_sql_exception $e) {
+        // Duplicate entry hatasını kontrol et
+        if ($e->getCode() == 1062) {
+            echo "<script>alert('Error: Duplicate entry. Scholar for this student already exists.');</script>";
+        } else {
+            echo "<script>alert('Error: " . $e->getMessage() . "');</script>";
+        }
     }
 
     $insertQuery->close();
