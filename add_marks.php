@@ -10,22 +10,22 @@ while ($student = $studentQuery->fetch_assoc()) {
 
 // Ders bilgilerini veritabanından çek
 $courseOptions = array();
-$courseQuery = $connection->query("SELECT CourseID, CourseName FROM course");
+$courseQuery = $connection->query("SELECT CourseID FROM course");  // CourseName'yi çıkardık
 while ($course = $courseQuery->fetch_assoc()) {
-    $courseOptions[$course['CourseID']] = $course['CourseID'] . " - " . $course['CourseName'];
+    $courseOptions[$course['CourseID']] = $course['CourseID'];
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
     // Retrieve values from the form
     $studentID = $_POST["studentID"];
-    $courseID = $_POST["courseID"];
+    $selectedCourseID = $_POST["courseID"];  // Değişiklik burada
     $marks = $_POST["marks"];
     $grades = $_POST["grades"];
     $semester = $_POST["semester"];
 
     // Insert the data into the Marks table
     $insertQuery = $connection->prepare("INSERT INTO marks (StudentID, CourseID, Marks, Grades, Semester) VALUES (?, ?, ?, ?, ?)");
-    $insertQuery->bind_param("iisss", $studentID, $courseID, $marks, $grades, $semester);
+    $insertQuery->bind_param("issis", $studentID, $selectedCourseID, $marks, $grades, $semester);
 
     if ($insertQuery->execute()) {
         echo "<script>alert('Marks added successfully');</script>";
