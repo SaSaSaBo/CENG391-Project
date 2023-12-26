@@ -1,0 +1,85 @@
+body {
+    box-sizing: border-box;
+    background-color: #121212;
+  }
+
+  h2 {
+    color: #ffffff;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  th, td {
+    border: 1px solid #ffffffd1;
+    text-align: left;
+    padding: 8px;
+  }
+
+  th {
+    background-color: #121212;
+    color: #ffffff;
+  }
+
+  td {
+    background-color: #1c1c1c;
+    color: #ffffff;
+  }
+
+  tr:nth-child(even) td {
+    background-color: #121212;
+    color: #ffffff;
+  }
+
+  .btn {
+    background-color: rgb(201, 131, 20);
+    color: rgb(0, 0, 0);
+    padding: 15px 20px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    opacity: 0.9;
+  }
+
+  .btn:hover {
+    opacity: 1;
+  }
+
+  .tab {
+    display: none;
+  }
+
+  button {
+    background-color: #a04545;
+    color: #fff;
+    font-size: 16px;
+    padding: 10px 14px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    display: inline-block;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+  button:hover {
+    background-color: #a04545b5;
+  }
+
+  .edi {
+    background-color: #ea7500;
+    text-decoration: none;
+    color: #000;
+    padding: 5px 8px;
+    border-radius: 8px;
+  }
+
+  .ed {
+    background-color: #a04545;
+    text-decoration: none;
+    color: #000;
+    padding: 5px 8px;
+    border-radius: 8px;
+  }

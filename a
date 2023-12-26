@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="EN">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        /* ... (CSS kısmı aynı) ... */
+    </style>
+
+    <title>Tables Pages</title>
+
+</head>
+
+<body>
+
+    <div style="text-align:center;margin-top:20px;">
+        <button onclick="showTab('studentTable')" class="button">Student Table</button>
+        <button onclick="showTab('courseTable')" class="button">Course Table</button>
+        <button onclick="showTab('marksTable')" class="button">Marks Table</button>
+        <button onclick="showTab('feeTable')" class="button">Fee Table</button>
+        <button onclick="showTab('scholarshipTable')" class="button">Scholarship Table</button>
+        <button onclick="logOut()" class="button">Log Out</button>
+    </div>
+
+    <!-- ... (Diğer HTML içeriği aynı) ... -->
+
+    <script>
+        function showTab(tabId) {
+            var tabs = document.getElementsByClassName("tab");
+            for (var i = 0; i < tabs.length; i++) {
+                tabs[i].style.display = "none";
+            }
+            document.getElementById(tabId).style.display = "block";
+        }
+
+        function logOut() {
+            window.location.href = 'home_page.php';
+        }
+
+        function showAddStudentForm() {
+            // Redirect to the Add Student page
+            window.location.href = 'add_student.php';
+        }
+
+        function showAddCourseForm() {
+            // Redirect to the Add Course page
+            window.location.href = 'add_course.php';
+        }
+
+        function showAddMarksForm() {
+            // Redirect to the Add Marks page
+            window.location.href = 'add_marks.php';
+        }
+
+        function showAddFeeForm() {
+            // Redirect to the Add Fee page
+            window.location.href = 'add_fee.php';
+        }
+
+        function showAddScholarForm() {
+            // Redirect to the Add Scholar page
+            window.location.href = 'add_scholar.php';
+        }
+    </script>
+
+</body>
+
+</html>
