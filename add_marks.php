@@ -1,7 +1,21 @@
 <?php
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
-    include "connection.php";
+include "connection.php";
 
+// Öğrenci bilgilerini veritabanından çek
+$studentOptions = array();
+$studentQuery = $connection->query("SELECT StudentID FROM student");
+while ($student = $studentQuery->fetch_assoc()) {
+    $studentOptions[$student['StudentID']] = $student['StudentID'];
+}
+
+// Ders bilgilerini veritabanından çek
+$courseOptions = array();
+$courseQuery = $connection->query("SELECT CourseID FROM course");
+while ($course = $courseQuery->fetch_assoc()) {
+    $courseOptions[$course['CourseID']] = $course['CourseID'];
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
     // Retrieve values from the form
     $studentID = $_POST["studentID"];
     $courseID = $_POST["courseID"];
@@ -9,32 +23,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
     $grades = $_POST["grades"];
     $semester = $_POST["semester"];
 
-    // Check if the entry already exists
-    $checkQuery = $connection->prepare("SELECT * FROM Marks WHERE StudentID = ? AND CourseID = ?");
-    $checkQuery->bind_param("ii", $studentID, $courseID);
-    $checkQuery->execute();
-    $checkResult = $checkQuery->get_result();
+    // Insert the data into the Marks table
+    $insertQuery = $connection->prepare("INSERT INTO marks (StudentID, CourseID, Marks, Grades, Semester) VALUES (?, ?, ?, ?, ?)");
+    $insertQuery->bind_param("iisss", $studentID, $courseID, $marks, $grades, $semester);
+    
 
-    if ($checkResult->num_rows > 0) {
-        echo "<script>alert('Entry already exists.');</script>";
+    if ($insertQuery->execute()) {
+        echo "<script>alert('Marks added successfully');</script>";
+        echo "<script>window.location.href = 'tables.php#marksTable';</script>";
     } else {
-        // Insert the data into the Marks table
-        $insertQuery = $connection->prepare("INSERT INTO Marks (StudentID, CourseID, Marks, Grades, Semester) VALUES (?, ?, ?, ?, ?)");
-        $insertQuery->bind_param("iisss", $studentID, $courseID, $marks, $grades, $semester);
-
-        if ($insertQuery->execute()) {
-            echo "<script>alert('Marks added successfully.');</script>";
-            echo "<script>window.location.href = 'tables.php';</script>";
-        } else {
-            echo "<script>alert('Error: " . $insertQuery->error . "\\nSQL: " . $insertQuery->errno . " " . $insertQuery->error . "');</script>";
-        }
-
-        $insertQuery->close();
+        echo "<script>alert('Error: " . $insertQuery->error . "\\nSQL: " . $insertQuery->errno . " " . $insertQuery->error . "');</script>";
     }
 
-    $checkQuery->close();
-    $connection->close();
+    $insertQuery->close();
 }
+
+$connection->close();
 ?>
 
 
@@ -136,13 +140,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
 
     <label for="courseID">Course ID:</label>
     <select id="courseID" name="courseID" required>
-        <?php
-            // Seçim kutusunu doldur
-            foreach ($courseOptions as $courseID => $courseName) {
-                echo "<option value='" . $courseID . "'>" . $courseName . "</option>";
-            }      
-        ?>
+    <?php
+        // Seçim kutusunu doldur
+        foreach ($courseOptions as $courseID) {
+            echo "<option value='" . $courseID . "'>" . $courseID . "</option>";
+        }
+    ?>
     </select><br>
+
 
     <label for="marks">Marks:</label>
     <input type="text" id="marks" name="marks" required><br>
@@ -163,39 +168,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
         document.getElementById('selectedCourseID').value = selectedCourseID;
     });
 </script>
-
-
-<?php
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
-    include "connection.php";
-
-    // Retrieve values from the form
-    $studentID = $_POST["studentID"];
-    $courseID = $_POST["courseID"];
-    // Update this line to correctly capture Course ID
-    $marks = $_POST["marks"];
-    $grades = $_POST["grades"];
-    $semester = $_POST["semester"];
-
-    // Insert the data into the Marks table
-    $insertQuery = $connection->prepare("INSERT INTO Marks (StudentID, CourseID, Marks, Grades, Semester) VALUES ('".$studentID."', '".$courseID."', '".$marks."', '".$grades."', '".$semester."')");
-
-    if ($insertQuery->execute()) {
-        echo "<script>alert('Marks added successfully');</script>";
-    } else {
-        echo "<script>alert('Error: " . $insertQuery->error . "\\nSQL: " . $insertQuery->errno . " " . $insertQuery->error . "');</script>";
-    }
-
-    $insertQuery->close();
-    $connection->close();
-
-    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
-        // Diğer form işlemleri ...
-    
-        echo "<script>window.location.href = 'tables.php#marksTable';</script>";
-    }
-}
-?>
 
 </body>
 </html>

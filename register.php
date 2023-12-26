@@ -66,23 +66,39 @@
   </html>
 
   <?php
+include "connection.php"; // Veritabanı bağlantı scriptini dahil et
 
-    include "connection.php";
+if (isset($_POST['usrnm']) && isset($_POST['psw'])) {
+    $username = $_POST['usrnm'];
+    $password = $_POST['psw']; 
 
-    if (isset($_POST['usrnm']) && isset($_POST['psw'])) {
-      $username = $_POST['usrnm'];
-      $password = $_POST['psw']; 
+    // Kontrol et: Aynı StudentID ile başka bir öğrenci var mı?
+    $checkQuery = $connection->prepare("SELECT * FROM student WHERE StudentID = ?");
+    $checkQuery->bind_param("s", $username);
+    $checkQuery->execute();
+    $checkResult = $checkQuery->get_result();
 
-      $add = "INSERT INTO student (`StudentID`, `Password`) VALUES ('".$username."', '".$password."')";
+    if ($checkResult->num_rows > 0) {
+        echo "<script>alert('This StudentID already exists.');</script>";
+    } else {
+        // Eğer aynı StudentID yoksa ekleme işlemini yap
+        $addQuery = $connection->prepare("INSERT INTO student (`StudentID`, `Password`) VALUES (?, ?)");
+        $addQuery->bind_param("ss", $username, $password);
 
-      if ($connection->query($add) === TRUE) {
-        echo "<script>alert('Register Successful');</script>";
-        // Yönlendirme işlemi
-        echo "<script>window.location.href = 'login_page.php';</script>";
-        exit(); // Bu noktada scriptin devam etmesini engelliyoruz
-      } else {
-        echo "<script>alert('Register Failed');</script>";
-      }
-    } 
+        if ($addQuery->execute()) {
+            echo "<script>alert('Registration successful');</script>";
+            // Yönlendirme işlemi
+            echo "<script>window.location.href = 'login_page.php';</script>";
+            exit(); // Bu noktada scriptin devam etmesini engelliyoruz
+        } else {
+            echo "<script>alert('Registration failed');</script>";
+        }
 
-  ?>
+        $addQuery->close();
+    }
+
+    $checkQuery->close();
+} 
+
+$connection->close();
+?>

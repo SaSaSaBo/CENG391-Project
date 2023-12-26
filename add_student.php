@@ -82,7 +82,7 @@
 <body>
 
 <h2>Add Student</h2>
-<!-- Your HTML form for adding a student -->
+
 <form method="post" action="add_student.php">
     <label for="studentID">Student ID:</label>
     <input type="text" name="studentID" required>
@@ -95,34 +95,47 @@
     <button type="submit">Add Student</button>
 </form>
 
-<!-- Add your additional HTML content if needed -->
 
 </body>
 </html>
 
 <?php
-include "connection.php"; // Include your database connection script
+include "connection.php"; // Veritabanı bağlantı scriptini dahil et
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $studentID = $_POST["studentID"];
     $password = $_POST["password"];
 
-    // Add more fields as needed
+    // Diğer alanları da ekleyebilirsiniz
 
-    // Perform SQL insertion
-    $insertQuery = $connection->prepare("INSERT INTO student (StudentID, Password) VALUES ('".$studentID."', '".$password."')");
+    // Kontrol et: Aynı StudentID ile başka bir öğrenci var mı?
+    $checkQuery = $connection->prepare("SELECT * FROM student WHERE StudentID = ?");
+    $checkQuery->bind_param("s", $studentID);
+    $checkQuery->execute();
+    $checkResult = $checkQuery->get_result();
 
-    if ($insertQuery->execute()) {
-        echo "<script>alert('Student added successfully');</script>";
+    if ($checkResult->num_rows > 0) {
+        echo "<script>alert('This StudentID already exists.');</script>";
     } else {
-        echo "<script>alert('Error: " . $insertQuery->error . "');</script>";
+        // Eğer aynı StudentID yoksa ekleme işlemini yap
+        $insertQuery = $connection->prepare("INSERT INTO student (StudentID, Password) VALUES (?, ?)");
+        $insertQuery->bind_param("ss", $studentID, $password);
+
+        if ($insertQuery->execute()) {
+            echo "<script>alert('Student succesfully added.');</script>";
+        } else {
+            echo "<script>alert('Error: " . $insertQuery->error . "');</script>";
+        }
+
+        $insertQuery->close();
+
+        // Öğrenci tablosu sayfasına yönlendir
+        echo "<script>window.location.href = 'tables.php';</script>";
     }
 
-    $insertQuery->close();
-
-    // Redirect to the student table page
-    echo "<script>window.location.href = 'tables.php';</script>";
+    $checkQuery->close();
 }
 
 $connection->close();
 ?>
+
