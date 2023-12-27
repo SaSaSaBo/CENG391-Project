@@ -1,69 +1,51 @@
-<!DOCTYPE html>
-<html lang="EN">
+<?php
+include "connection.php";
 
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <style>
-        /* ... (CSS kısmı aynı) ... */
-    </style>
+// Silme işlemi
+if (isset($_POST['delete_button'])) {
+    // Form is submitted, get the id_to_delete value
+    $id_to_delete = isset($_POST['id_to_delete']) ? $_POST['id_to_delete'] : '';
 
-    <title>Tables Pages</title>
+    // $id_to_delete değerini kontrol et
+    if (!empty($id_to_delete)) {
+        // Silme sorgusu
+        $sql_delete = "DELETE FROM course WHERE CourseID = $id_to_delete";
 
-</head>
+        // Sorguyu ekrana yazdır
+        echo "Sorgu: " . $sql_delete . "<br>";
 
-<body>
-
-    <div style="text-align:center;margin-top:20px;">
-        <button onclick="showTab('studentTable')" class="button">Student Table</button>
-        <button onclick="showTab('courseTable')" class="button">Course Table</button>
-        <button onclick="showTab('marksTable')" class="button">Marks Table</button>
-        <button onclick="showTab('feeTable')" class="button">Fee Table</button>
-        <button onclick="showTab('scholarshipTable')" class="button">Scholarship Table</button>
-        <button onclick="logOut()" class="button">Log Out</button>
-    </div>
-
-    <!-- ... (Diğer HTML içeriği aynı) ... -->
-
-    <script>
-        function showTab(tabId) {
-            var tabs = document.getElementsByClassName("tab");
-            for (var i = 0; i < tabs.length; i++) {
-                tabs[i].style.display = "none";
-            }
-            document.getElementById(tabId).style.display = "block";
+        if ($connection->query($sql_delete) === TRUE) {
+            echo "<script>alert('Course successfully deleted.');</script>";
+        } else {
+            // Hata detaylarını ekrana yazdır
+            echo "Hata: " . $connection->error . "<br>";
+            echo "<script>alert('Error deleting course.');</script>";
         }
+    } else {
+        echo "<script>alert('Invalid CourseID.');</script>";
+    }
+}
 
-        function logOut() {
-            window.location.href = 'home_page.php';
-        }
+$select = "SELECT * FROM course";
+$result = $connection->query($select);
 
-        function showAddStudentForm() {
-            // Redirect to the Add Student page
-            window.location.href = 'add_student.php';
-        }
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        // CourseID değerini kontrol et
+        $courseID = isset($row["CourseID"]) ? $row["CourseID"] : '';
 
-        function showAddCourseForm() {
-            // Redirect to the Add Course page
-            window.location.href = 'add_course.php';
-        }
-
-        function showAddMarksForm() {
-            // Redirect to the Add Marks page
-            window.location.href = 'add_marks.php';
-        }
-
-        function showAddFeeForm() {
-            // Redirect to the Add Fee page
-            window.location.href = 'add_fee.php';
-        }
-
-        function showAddScholarForm() {
-            // Redirect to the Add Scholar page
-            window.location.href = 'add_scholar.php';
-        }
-    </script>
-
-</body>
-
-</html>
+        echo "<tr>
+            <td style='color: white;'>" . $courseID . "</td>
+            <td style='color: white;'>" . $row["CourseName"] . "</td>
+            <td>
+                <form method='post' onsubmit='return confirmDelete();'>
+                    <input type='hidden' name='id_to_delete' value='" . $courseID . "'>
+                    <input type='submit' name='delete_button' value='Delete' class='ed'>
+                </form>
+            </td>
+        </tr>";
+    }
+} else {
+    echo "<tr><td colspan='3'>0 results</td></tr>";
+}
+?>

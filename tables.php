@@ -66,6 +66,11 @@
     ?>
 
   </table>
+
+  <div style="text-align:center;margin-top:20px;"> 
+    <button onclick="showAddStudentForm()" class="button">Add Student</button>
+  </div>
+
 </div>
 
 <div class="tab" id="courseTable">
@@ -81,27 +86,59 @@
 
       include "connection.php";
 
+              // Silme işlemi
+              if (isset($_POST['delete_button'])) {
+                // Form is submitted, get the id_to_delete value
+                $id_to_delete = isset($_POST['id_to_delete']) ? $_POST['id_to_delete'] : '';
+    
+                if (!empty($id_to_delete)) {
+                  // Silme sorgusu
+                  $sql_delete = "DELETE FROM course WHERE CourseID = $id_to_delete";
+          
+                  // Sorguyu ekrana yazdır
+                  echo "Sorgu: " . $sql_delete . "<br>";
+          
+                  if ($connection->query($sql_delete) === TRUE) {
+                      echo "<script>alert('Course successfully deleted.');</script>";
+                  } else {
+                      // Hata detaylarını ekrana yazdır
+                      echo "Hata: " . $connection->error . "<br>";
+                      echo "<script>alert('Error deleting course.');</script>";
+                  }
+              } else {
+                  echo "<script>alert('Invalid CourseID.');</script>";
+              }
+            }
+
       $select = "SELECT * FROM course";
-      $result = $connection->query($select);
+      $result = $connection->query($select);    
 
       if ($result->num_rows > 0) {
         while ($select = $result->fetch_assoc()) {
+          $courseID = isset($row["CourseID"]) ? $row["CourseID"] : '';
           echo "<tr>
           <td style='color: white;'>" . $select["CourseID"] . "</td>
           <td style='color: white;'>" . $select["CourseName"] . "</td>
           <td>
-          <a href='?action=delete&id=" . (isset($row["StudentID"]) ? $row["StudentID"] : "") . "' class='ed'>Delete</a>
-      </td>
+          <a href='delete_course.php?id=" . $select["CourseID"] . "' class='ed'>Delete</a>
+          </td>
           </tr>";
         }
       }
       else {
         echo "<tr><td colspan='3'>0 results</td></tr>";
       }
+
+
     
     ?>
 
   </table>
+
+  <div style="text-align:center;margin-top:20px;"> 
+    <button onclick="showAddCourseForm()" class="button">Add Course</button>
+  </div>
+
 </div>
 
 <div class="tab" id="marksTable">
@@ -124,13 +161,13 @@
       $result = $connection->query($select);
 
       if ($result->num_rows > 0) {
-        while ($select = $result->fetch_assoc()) {
+        while ($row = $result->fetch_assoc()) {
           echo "<tr>
-          <td>" . $select["StudentID"] . "</td>
-          <td>" . $select["CourseID"] . "</td>
-          <td>" . $select["Marks"] . "</td>
-          <td>" . $select["Grades"] . "</td>
-          <td>" . $select["Semester"] . "</td>
+          <td>" . $row["StudentID"] . "</td>
+          <td>" . $row["CourseID"] . "</td>
+          <td>" . $row["Marks"] . "</td>
+          <td>" . $row["Grades"] . "</td>
+          <td>" . $row["Semester"] . "</td>
           <td>
             <a href='edit_marks.php?id=" . $row["StudentID"] . "' class='edi'>Edit</a>  
             <a href='?action=delete&id=" . $row["StudentID"] . "' class='ed'>Delete</a>
@@ -145,6 +182,11 @@
     ?>
 
   </table>
+
+  <div style="text-align:center;margin-top:20px;"> 
+    <button onclick="showAddMarksForm()" class="button">Add Marks</button>
+  </div>
+
 </div>
 
 <div class="tab" id="feeTable">
@@ -186,6 +228,11 @@
     ?>
 
   </table>
+
+  <div style="text-align:center;margin-top:20px;"> 
+    <button onclick="showAddFeeForm()" class="button">Add Student</button>
+  </div>
+
 </div>
 
 <div class="tab" id="scholarshipTable">
@@ -227,9 +274,47 @@
     ?>
 
   </table>
+
+  <div style="text-align:center;margin-top:20px;"> 
+    <button onclick="showAddScholarForm()" class="button">Add Student</button>
+  </div>
+
 </div>
 
+<script>
+  function showAddStudentForm() {
+    // Redirect to the Add Course page
+    window.location.href = 'add_student.php'; // Replace 'add_course.php' with the actual URL
+  }
+</script>
 
+<script>
+  function showAddCourseForm() {
+    // Redirect to the Add Course page
+    window.location.href = 'add_course.php'; // Replace 'add_course.php' with the actual URL
+  }
+</script>
+
+<script>
+  function showAddMarksForm() {
+    // Redirect to the Add Course page
+    window.location.href = 'add_marks.php'; // Replace 'add_course.php' with the actual URL
+  }
+</script>
+
+<script>
+  function showAddFeeForm() {
+    // Redirect to the Add Course page
+    window.location.href = 'add_fee.php'; // Replace 'add_course.php' with the actual URL
+  }
+</script>
+
+<script>
+  function showAddScholarForm() {
+    // Redirect to the Add Course page
+    window.location.href = 'add_scholar.php'; // Replace 'add_course.php' with the actual URL
+  }
+</script>
 
 </body>
 </html>
