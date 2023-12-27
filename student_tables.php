@@ -49,12 +49,13 @@
 
       if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
+          $password = str_repeat('*', strlen($row["Password"])); // '*' ile değiştirme
           echo "<tr>
                   <td style='color: white;'>" . $row["StudentID"] . "</td>
-                  <td style='color: white;'>" . $row["Password"] . "</td>
-                  ";
-        }
-      } else {
+                  <td style='color: white;'>" . $password . "</td>
+                ";
+      }
+  } else {
         echo "<tr><td colspan='3'>0 results</td></tr>";
       }
     ?>
