@@ -161,9 +161,10 @@
 
       if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
+          $amount = str_repeat('*', strlen($row["Amount"]));
           echo "<tr>
           <td>" . $row["StudentID"] . "</td>
-          <td>" . $row["Amount"] . "</td>
+          <td style='color: white;'>" . $amount . "</td>
           <td>" . $row["DueDate"] . "</td>
           <td>" . $row["PaymentStatus"] . "</td>
           </tr>";
@@ -199,10 +200,11 @@
 
       if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
+          $amount = str_repeat('*', strlen($row["Amount"]));
           echo "<tr>
           <td>" . $row["StudentID"] . "</td>
           <td>" . $row["Type"] . "</td>
-          <td>" . $row["Amount"] . "</td>
+          <td style='color: white;'>" . $amount . "</td>
           <td>" . $row["ValidityPeriod"] . "</td>
 
           </tr>";
