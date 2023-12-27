@@ -1,44 +1,25 @@
 <?php
-include "connection.php";
+  session_start(); // Oturumu başlat
 
-if (isset($_POST['usrnm']) && isset($_POST['psw'])) {
-    $username = $_POST['usrnm'];
-    $password = $_POST['psw'];
+  include "connection.php";
 
-    if (isset($_POST['admin_button'])) {
-        // Admin butonuna tıklanmışsa sadece admin tablosunu kontrol et
-        $queryAdmin = $connection->prepare("SELECT Password FROM admin WHERE StudentID = ?");
-        $queryAdmin->bind_param("s", $username);
-        $queryAdmin->execute();
-        $queryAdmin->bind_result($adminPlainTextPassword);
-        $queryAdmin->fetch();
-        $queryAdmin->close();
+  $select = "SELECT * FROM student";
+  $result = $connection->query($select);
 
-        if ($adminPlainTextPassword !== null && $password === $adminPlainTextPassword) {
-            // Admin girişi başarılı, tables.php'ye yönlendir
-            header("Location: tables.php");
-            exit();
-        } else {
-            // Yanlış şifre veya kullanıcı adı
-            echo "<script>alert('Admin login failed');</script>";
-        }
-    } elseif (isset($_POST['student_button'])) {
-        // Student butonuna tıklanmışsa sadece student tablosunu kontrol et
-        $queryStudent = $connection->prepare("SELECT Password FROM student WHERE StudentID = ?");
-        $queryStudent->bind_param("s", $username);
-        $queryStudent->execute();
-        $queryStudent->bind_result($studentPlainTextPassword);
-        $queryStudent->fetch();
-        $queryStudent->close();
-
-        if ($studentPlainTextPassword !== null && $password === $studentPlainTextPassword) {
-            // Öğrenci girişi başarılı, öğrenci sayfasına yönlendir
-            header("Location: student_page.php");
-            exit();
-        } else {
-            // Yanlış şifre veya kullanıcı adı
-            echo "<script>alert('Student login failed');</script>";
-        }
+  if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+      echo "<tr>
+              <td style='color: white;'>" . $row["StudentID"] . "</td>
+              <td style='color: white;'>" . $row["Password"] . "</td>
+              <td>";
+      // Edit bağlantısını sadece giriş yapılan "StudentID" için göster
+      if (isset($_SESSION['studentID']) && $row["StudentID"] == $_SESSION['studentID']) {
+        echo "<a href='edit_student.php?id=" . $row["StudentID"] . "' class='edi'>Edit</a>";
+      }
+      echo "</td>
+            </tr>";
     }
-}
+  } else {
+    echo "<tr><td colspan='3'>0 results</td></tr>";
+  }
 ?>

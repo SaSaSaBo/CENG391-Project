@@ -39,28 +39,23 @@
     <tr>
       <th>StudentID</th>
       <th>Password</th>
-      <th>Action</th>
     </tr>
 
     <?php
-
       include "connection.php";
 
       $select = "SELECT * FROM student";
       $result = $connection->query($select);
-      
+
       if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
           echo "<tr>
                   <td style='color: white;'>" . $row["StudentID"] . "</td>
                   <td style='color: white;'>" . $row["Password"] . "</td>
-                  <td>
-                      <a href='edit_student.php?id=" . $row["StudentID"] . "' class='edi'>Edit</a>  
-                  </td>
-                </tr>";
+                  ";
         }
       } else {
-          echo "<tr><td colspan='3'>0 results</td></tr>";
+        echo "<tr><td colspan='3'>0 results</td></tr>";
       }
     ?>
 
