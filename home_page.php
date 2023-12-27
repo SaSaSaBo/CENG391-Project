@@ -14,114 +14,19 @@
         <div id="logo">STUDENT RECORD KEEPING SYSTEM DATABASE</div>
     </section>
 
-        <p>
-            <br>
-            This project includes a database system created to keep and manage student records. Below is the UML and relational schema information about the project:<br>
-            <br>
-        </p>
+<br>
+<br>
 
-    <section id="info1">
-        <p>UML (Unified Modeling Language) Diagram:</p><br>
-        <img src="images/umldiagram_skrs.png" alt="umldiagram"><br>
+<section id="info1">
+        <img src="images/okan_srks.png" alt="umldiagram"><br>
+        
+        <a href="register.php">
+            <button class="button">Sign In</button>
+        </a>
     </section>
 
-            <br>
 
-    <section id="info2">
-        <p>Relational Schema:</p>
-        <hr>
-        <p>
-            <p class="tables">1. Student Table:</p>
-            <ul>
-                <li>Attributes:
-                    <ul>
-                        <li><code>StudentID</code>(Primary Key)</li>
-                        <li><code>Password</code></li>
-                    </ul>
-                </li>
-            </ul>
-        </p>
-        <br>
-        <br>
-        <hr>
-        <br>
-        <p>
-            <p class="tables">2. Course Table:</p>
-            <ul>
-                <li>Attributes:
-                    <ul>
-                        <li><code>CourseID</code>(Primary Key)</li>
-                        <li><code>CourseName</code></li>
-                    </ul>
-                </li>
-            </ul>
-        </p>
-        <br>
-        <br>
-        <hr>
-        <br>
-        <p>
-            <p class="tables">3. Marks Table:</p>
-            <ul>
-                <li>Attributes:
-                    <ul>
-                        <li><code>StudentID</code>(Foreign Key)</li>
-                        <li><code>CourseID</code>(Foreign Key)</li>
-                        <li><code>Marks</code></li>
-                        <li><code>Grade</code></li>
-                        <li><code>Semester</code></li>
-                    </ul>
-                </li>
-            </ul>
-        </p>
-        <br>
-        <br>
-        <hr>
-        <br>
-        <p>
-            <p class="tables">4. Fee Table:</p>
-            <ul>
-                <li>Attributes:
-                    <ul>
-                        <li><code>StudentID</code>(Foreign Key)</li>
-                        <li><code>Amount</code></li>
-                        <li><code>DueDate</code></li>
-                        <li><code>PaymentStatus</code></li>
-                    </ul>
-                </li>
-            </ul>
-        </p>
-        <br>
-        <br>
-        <hr>
-        <br>
-        <p>
-            <p class="tables">5. Concession/Scholarship Table:</p>
-            <ul>
-                <li>Attributes:
-                    <ul>
-                        <li><code>StudentID</code> (Foreign Key)</li>
-                        <li><code>Type</code></li>
-                        <li><code>Amount</code></li>
-                        <li><code>ValidityPeriod</code></li>
-                    </ul>
-                </li>
-            </ul>
-        </p>
-    </section>
-<br>
-<br>
-<br>
-<br>
-
-    <a href="register.php">
-        <button class="button">Sign In</button>
-    </a>
-
-
-
-    <div id="copyright">2023 All Rights Reserved</div>
-    <a href="javascript:void(0);" onclick="scrollToSection();" href="#menu"><i class="fa-solid fa-arrow-up" id="up"></i></a>
+    <div id="copyright" style="position: fixed; bottom: 0; left: 0; padding: 10px; font-size: 10px;">2023 All Rights Reserved</div>
 
     <script src="https://code.jquery.com/jquery-3.6.1.slim.min.js" integrity="sha256-w8CvhFs7iHNVUtnSP0YKEg00p9Ih13rlL9zGqvLdePA=" crossorigin="anonymous"></script>
     <script src="owl/owl.carousel.min.js"></script>
