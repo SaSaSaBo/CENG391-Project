@@ -46,6 +46,30 @@
 
       include "connection.php";
 
+                    // Silme işlemi
+                    if (isset($_POST['delete_button'])) {
+                      // Form is submitted, get the id_to_delete value
+                      $id_to_delete = isset($_POST['id_to_delete']) ? $_POST['id_to_delete'] : '';
+          
+                      if (!empty($id_to_delete)) {
+                        // Silme sorgusu
+                        $sql_delete = "DELETE FROM student WHERE StudentID = $id_to_delete";
+                
+                        // Sorguyu ekrana yazdır
+                        echo "Sorgu: " . $sql_delete . "<br>";
+                
+                        if ($connection->query($sql_delete) === TRUE) {
+                            echo "<script>alert('Student successfully deleted.');</script>";
+                        } else {
+                            // Hata detaylarını ekrana yazdır
+                            echo "Error: " . $connection->error . "<br>";
+                            echo "<script>alert('Error deleting course.');</script>";
+                        }
+                    } else {
+                        echo "<script>alert('Invalid CourseID.');</script>";
+                    }
+                  }
+
       $select = "SELECT * FROM student";
       $result = $connection->query($select);
       
@@ -56,7 +80,7 @@
                   <td style='color: white;'>" . $row["Password"] . "</td>
                   <td>
                       <a href='edit_student.php?id=" . $row["StudentID"] . "' class='edi'>Edit</a>  
-                      <a href='?action=delete&id=" . $row["StudentID"] . "' class='ed'>Delete</a>
+                      <a href='delete_student.php?id=" . $row["StudentID"] . "' class='ed'>Delete</a>
                   </td>
                 </tr>";
         }
@@ -157,6 +181,30 @@
 
       include "connection.php";
 
+                    // Silme işlemi
+                    if (isset($_POST['delete_button'])) {
+                      // Form is submitted, get the id_to_delete value
+                      $id_to_delete = isset($_POST['id_to_delete']) ? $_POST['id_to_delete'] : '';
+          
+                      if (!empty($id_to_delete)) {
+                        // Silme sorgusu
+                        $sql_delete = "DELETE FROM marks WHERE StudentID = $id_to_delete";
+                
+                        // Sorguyu ekrana yazdır
+                        echo "Sorgu: " . $sql_delete . "<br>";
+                
+                        if ($connection->query($sql_delete) === TRUE) {
+                            echo "<script>alert('Marks successfully deleted.');</script>";
+                        } else {
+                            // Hata detaylarını ekrana yazdır
+                            echo "Hata: " . $connection->error . "<br>";
+                            echo "<script>alert('Error deleting marks.');</script>";
+                        }
+                    } else {
+                        echo "<script>alert('Invalid Marks.');</script>";
+                    }
+                  }
+
       $select = "SELECT * FROM marks";
       $result = $connection->query($select);
 
@@ -170,7 +218,7 @@
           <td>" . $row["Semester"] . "</td>
           <td>
             <a href='edit_marks.php?id=" . $row["StudentID"] . "' class='edi'>Edit</a>  
-            <a href='?action=delete&id=" . $row["StudentID"] . "' class='ed'>Delete</a>
+            <a href='delete_marks.php?id=" . $row["StudentID"] . "' class='ed'>Delete</a>
           </td>
           </tr>";
         }
@@ -204,6 +252,31 @@
 
       include "connection.php";
 
+                    // Silme işlemi
+                    if (isset($_POST['delete_button'])) {
+                      // Form is submitted, get the id_to_delete value
+                      $id_to_delete = isset($_POST['id_to_delete']) ? $_POST['id_to_delete'] : '';
+          
+                      if (!empty($id_to_delete)) {
+                        // Silme sorgusu
+                        $sql_delete = "DELETE FROM fee WHERE StudentID = $id_to_delete";
+                
+                        // Sorguyu ekrana yazdır
+                        echo "Sorgu: " . $sql_delete . "<br>";
+                
+                        if ($connection->query($sql_delete) === TRUE) {
+                            echo "<script>alert('Fee informations successfully deleted.');</script>";
+                        } else {
+                            // Hata detaylarını ekrana yazdır
+                            echo "Hata: " . $connection->error . "<br>";
+                            echo "<script>alert('Error deleting fee informations.');</script>";
+                        }
+                    } else {
+                        echo "<script>alert('Invalid Fee.');</script>";
+                    }
+                  }
+      
+
       $select = "SELECT * FROM fee";
       $result = $connection->query($select);
 
@@ -216,7 +289,7 @@
           <td>" . $row["PaymentStatus"] . "</td>
           <td>
             <a href='edit_fee.php?id=" . $row["StudentID"] . "' class='edi'>Edit</a> 
-            <a href='?action=delete&id=" . $row["StudentID"] . "' class='ed'>Delete</a>
+            <a href='delete_fee.php?id=" . $row["StudentID"] . "' class='ed'>Delete</a>
           </td>
           </tr>";
         }
@@ -250,6 +323,30 @@
 
       include "connection.php";
 
+                    // Silme işlemi
+                    if (isset($_POST['delete_button'])) {
+                      // Form is submitted, get the id_to_delete value
+                      $id_to_delete = isset($_POST['id_to_delete']) ? $_POST['id_to_delete'] : '';
+          
+                      if (!empty($id_to_delete)) {
+                        // Silme sorgusu
+                        $sql_delete = "DELETE FROM scholar WHERE StudentID = $id_to_delete";
+                
+                        // Sorguyu ekrana yazdır
+                        echo "Sorgu: " . $sql_delete . "<br>";
+                
+                        if ($connection->query($sql_delete) === TRUE) {
+                            echo "<script>alert('Scholarship informations successfully deleted.');</script>";
+                        } else {
+                            // Hata detaylarını ekrana yazdır
+                            echo "Hata: " . $connection->error . "<br>";
+                            echo "<script>alert('Error deleting scholarship informations.');</script>";
+                        }
+                    } else {
+                        echo "<script>alert('Invalid Scholarship Information.');</script>";
+                    }
+                  }
+
       $select = "SELECT * FROM scholar";
       $result = $connection->query($select);
 
@@ -262,7 +359,7 @@
           <td>" . $row["ValidityPeriod"] . "</td>
           <td>
             <a href='edit_scholar.php?id=" . $row["StudentID"] . "' class='edi'>Edit</a> 
-            <a href='?action=delete&id=" . $row["StudentID"] . "' class='ed'>Delete</a>
+            <a href='delete_scholar.php?id=" . $row["StudentID"] . "' class='ed'>Delete</a>
           </td>
           </tr>";
         }
