@@ -6,7 +6,7 @@ if (isset($_GET['id'])) {
     $id_to_delete = $_GET['id'];
 
     // Güvenli bir şekilde parametreyi kullanarak sorgu oluşturma
-    $stmt = $connection->prepare("DELETE FROM marks WHERE StudentID = ?");
+    $stmt = $connection->prepare("DELETE FROM marks WHERE CourseID = ?");
     $stmt->bind_param("s", $id_to_delete);
 
     // Sorguyu çalıştır

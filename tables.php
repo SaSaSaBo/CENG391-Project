@@ -188,7 +188,7 @@
           
                       if (!empty($id_to_delete)) {
                         // Silme sorgusu
-                        $sql_delete = "DELETE FROM marks WHERE StudentID = $id_to_delete";
+                        $sql_delete = "DELETE FROM marks WHERE CourseID = $id_to_delete";
                 
                         // Sorguyu ekrana yazdır
                         echo "Sorgu: " . $sql_delete . "<br>";
@@ -218,7 +218,7 @@
           <td>" . $row["Semester"] . "</td>
           <td>
             <a href='edit_marks.php?id=" . $row["StudentID"] . "' class='edi'>Edit</a>  
-            <a href='delete_marks.php?id=" . $row["StudentID"] . "' class='ed'>Delete</a>
+            <a href='delete_marks.php?id=" . $row["CourseID"] . "' class='ed'>Delete</a>
           </td>
           </tr>";
         }
