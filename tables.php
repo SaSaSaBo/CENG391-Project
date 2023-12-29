@@ -91,9 +91,6 @@
 
   </table>
 
-  <div style="text-align:center;margin-top:20px;"> 
-    <button onclick="showAddStudentForm()" class="button">Add Student</button>
-  </div>
 
 </div>
 

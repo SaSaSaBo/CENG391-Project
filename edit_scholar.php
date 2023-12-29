@@ -34,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET["studentID"])) {
         die('Error in preparing the update query: ' . $connection->error);
     }
 
-    $updateQuery->bind_param("sssi", $type, $amount, $validityPeriod, $studentID);
+    $updateQuery->bind_param("sisi", $type, $amount, $validityPeriod, $studentID);
 
     if ($updateQuery->execute()) {
         echo "<script>alert('Scholarship information updated successfully');</script>";
@@ -128,10 +128,10 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET["studentID"])) {
 
         <form method="post" action="">
             <label for="newType">New Type:</label>
-            <input type="text" id="newType" name="newType" value="<?php echo $type; ?>" required>
+            <input type="text" id="newType" name="newType" value="" required>
 
             <label for="newAmount">New Amount:</label>
-            <input type="text" id="newAmount" name="newAmount" value="<?php echo $amount; ?>" required>
+            <input type="text" id="newAmount" name="newAmount" value="" required>
 
             <label for="newValidityPeriod">New ValidityPeriod:</label>
             <input type="date" id="newValidityPeriod" name="newValidityPeriod" value="<?php echo $validityPeriod; ?>" required>
