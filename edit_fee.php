@@ -1,3 +1,63 @@
+<?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+include "connection.php";
+
+$amount = ""; // Varsayılan değerleri tanımla
+$dueDate = "";
+$paymentStatus = "";
+
+if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET["studentID"])) {
+    $studentID = intval($_GET["studentID"]);  // <-- Değişiklik burada yapıldı
+
+    $selectQuery = $connection->prepare("SELECT * FROM fee WHERE StudentID = ?");
+    $selectQuery->bind_param("i", $studentID);
+    $selectQuery->execute();
+    $result = $selectQuery->get_result();
+
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $amount = $row["Amount"];
+        $dueDate = $row["DueDate"];
+        $paymentStatus = $row["PaymentStatus"];
+    } else {
+        echo "<script>alert('No fee information found for student ID: " . $studentID . "');</script>";
+    }
+
+    $selectQuery->close();
+} elseif ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["studentID"])) {
+    $studentID = intval($_POST["studentID"]);
+    $amount = isset($_POST["newAmount"]) ? $_POST["newAmount"] : "";
+    $dueDate = isset($_POST["newDueDate"]) ? $_POST["newDueDate"] : "";
+    $paymentStatus = isset($_POST["newPaymentStatus"]) ? $_POST["newPaymentStatus"] : "";
+
+    // $amount = $_POST["newAmount"];
+    // $dueDate = $_POST["newDueDate"];
+    // $paymentStatus = $_POST["newPaymentStatus"];
+
+    $updateQuery = $connection->prepare("UPDATE fee SET Amount=?, DueDate=?, PaymentStatus=? WHERE StudentID=?");
+    
+    // Prepare hatasını kontrol et
+    if ($updateQuery === false) {
+        die('Error in preparing the update query: ' . $connection->error);
+    }
+    
+    $updateQuery->bind_param("dssi", $amount, $dueDate, $paymentStatus, $studentID);
+
+    // Execute hatasını kontrol et
+    if ($updateQuery->execute()) {
+        echo "<script>alert('Fee information updated successfully');</script>";
+        header("Location: tables.php");
+        exit();
+    } else {
+        echo "<script>alert('Error: " . $updateQuery->error . "\\nSQL: " . $updateQuery->errno . " " . $updateQuery->error . "');</script>";
+    }
+
+    $updateQuery->close();
+}
+    ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -73,26 +133,7 @@
 
 <body>
 
-<?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 
-include "connection.php";
-
-if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET["studentID"])) {
-    $studentID = intval($_GET["studentID"]);  // <-- Değişiklik burada yapıldı
-
-    $selectQuery = $connection->prepare("SELECT * FROM fee WHERE StudentID = ?");
-    $selectQuery->bind_param("i", $studentID);
-    $selectQuery->execute();
-    $result = $selectQuery->get_result();
-
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        $amount = $row["Amount"];
-        $dueDate = $row["DueDate"];
-        $paymentStatus = $row["PaymentStatus"];
-    ?>
         <h2>Edit Fee Information</h2>
     
         <form method="post" action="">
@@ -109,39 +150,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET["studentID"])) {
     
             <input type="submit" value="Update Information">
         </form>
-    <?php
-    } else {
-        echo "<script>alert('No fee information found for student ID: " . $studentID . "');</script>";
-    }
 
-    $selectQuery->close();
-} elseif ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["studentID"])) {
-    $studentID = intval($_POST["studentID"]);
-    $amount = $_POST["newAmount"];
-    $dueDate = $_POST["newDueDate"];
-    $paymentStatus = $_POST["newPaymentStatus"];
-
-    $updateQuery = $connection->prepare("UPDATE fee SET Amount=?, DueDate=?, PaymentStatus=? WHERE StudentID=?");
-    
-    // Prepare hatasını kontrol et
-    if ($updateQuery === false) {
-        die('Error in preparing the update query: ' . $connection->error);
-    }
-    
-    $updateQuery->bind_param("dssi", $amount, $dueDate, $paymentStatus, $studentID);
-
-    // Execute hatasını kontrol et
-    if ($updateQuery->execute()) {
-        echo "<script>alert('Fee information updated successfully');</script>";
-        header("Location: tables.php");
-        exit();
-    } else {
-        echo "<script>alert('Error: " . $updateQuery->error . "\\nSQL: " . $updateQuery->errno . " " . $updateQuery->error . "');</script>";
-    }
-
-    $updateQuery->close();
-}
-?>
 
 
 </body>
